@@ -1,6 +1,5 @@
 import { Game } from "./components/Game";
 import { GameProvider } from "./hooks/useGame";
-
 import { ThemeProvider } from "styled-components";
 import GlobalStyles from "./styles/global";
 import theme from "./styles/theme";
@@ -9,8 +8,8 @@ export function App() {
   return (
     <ThemeProvider theme={theme}>
       <GameProvider>
-        <Game />
         <GlobalStyles />
+        <Game /> 
       </GameProvider>
     </ThemeProvider>
   );

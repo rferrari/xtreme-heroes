@@ -12,8 +12,14 @@ export default createGlobalStyle`${css`
   }
 
   html,
-  body,
+  body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevents scrolling on the entire page */
+  }
+
   #root {
+    position: relative;
     width: 100%;
     height: 100vh;
 
@@ -27,9 +33,32 @@ export default createGlobalStyle`${css`
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
 
-    overflow-x: hidden;
+    overflow: hidden; /* Prevents scrolling within #root */
 
-    background: url("https://i.postimg.cc/2yKHtJKH/stone.jpg") center center;
+    /* Set the background image */
+    background-size: cover; /* Stretches the background to cover the entire area */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    background-image: url("/skateparks/skate-park-l1.jpeg"); /* Background image */
+  }
+
+  #root::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9); /* Semi-transparent black overlay */
+    z-index: 1; /* Ensures overlay is above the background image */
+  }
+
+  #root > * {
+    position: relative;
+    z-index: 2; /* Ensures content is above the overlay */
+    height: 100%; /* Ensure content fills the height of #root */
+    overflow: hidden; /* Prevents any internal scrolling within the content */
   }
 
   button {

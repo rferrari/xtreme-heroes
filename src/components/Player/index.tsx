@@ -46,7 +46,7 @@ export function Player({
   const [attributesStats, setAttributesStats] = useState<AattributesStats[]>(
     []
   );
-  const color = theme.colors[isBot ? "red" : "blue_300"];
+  const color = theme.colors[isBot ? "red" : "green"];  //Selected atribute box
   const isDisabled = stage !== "attribute-selection" || turn === "playerTwo";
 
   function handleAttributeClick(attribute: string) {
@@ -101,13 +101,14 @@ export function Player({
           key={selectedFighter.id}
           isBot={isBot}
           isDisabled={isDisabled}
-          image={`https://i.postimg.cc/${selectedFighter.image}`}
+          image={`/skaters/${selectedFighter.image}`}
           initial={{ x: isBot ? 20 : -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.4 }}
         >
           <>
             <Attributes>
+              <strong>{selectedFighter.name}</strong>
               <dl>
                 {attributesStats.map(({ name, stats }) => (
                   <Attribute
@@ -120,7 +121,7 @@ export function Player({
                       style={{
                         color:
                           selectedAttribute === name
-                            ? theme.colors[isBot ? "red" : "blue_300"]
+                            ? theme.colors[isBot ? "red" : "green_300"]
                             : "inherit",
                       }}
                     >
@@ -156,7 +157,7 @@ export function Player({
                 ))}
               </dl>
             </Attributes>
-            <strong>{selectedFighter.name}</strong>
+            {/* <strong>{selectedFighter.name}</strong> */}
           </>
         </SelectedFighter>
       ) : (
@@ -203,7 +204,7 @@ export function Player({
             <AnimatePresence mode="wait">
               <FighterCard
                 key={String(id)}
-                image={`https://i.postimg.cc/${image}`}
+                image={`/skaters/${image}`}
                 variants={cardAnimation}
                 initial={"enter"}
                 animate={isSelected ? "active" : "desactive"}

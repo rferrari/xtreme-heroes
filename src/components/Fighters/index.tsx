@@ -56,7 +56,7 @@ export function Fighters() {
         return (
           <FighterCard
             key={id}
-            image={`https://i.postimg.cc/${image}`}
+            image={`/skaters/${image}`}
             isPlayerOne={isPlayerOne}
             isPlayerTwo={isPlayerTwo}
             disabled={stage !== "fighterOne-selection"}

@@ -15,21 +15,54 @@ import { Variants, motion } from "framer-motion";
 import { Container } from "./styles";
 import { fighters } from "../../utils/fighters";
 import theme from "../../styles/theme";
+import { Checkbox } from "../Player/styles";
 
 export function Game() {
   const {
     state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
     dispatch,
   } = useGame();
-  const [message, setMessage] = useState("Select your 10 fighters");
+
+  const [currentLevel, setCurrentLevel] = useState(1);
+  const [message, setMessage] = useState("Select your 10 skaters");
   const [isFightButtonVisible, setIsFightButtonVisible] = useState(false);
-  const [isRoundResultModalVisible, setIsRoundResultModalVisible] =
-    useState(false);
+  const [isRoundResultModalVisible, setIsRoundResultModalVisible] = useState(false);
   const selectedFightersIds = useRef<number[]>([]);
+
+  // battle logs
+  const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
+
+ // Function to change the background image
+  const changeBackground = () => {
+    setCurrentLevel(prevLevel => {
+      const nextLevel = prevLevel === 5 ? 1 : prevLevel + 1;
+      return nextLevel;
+    });
+  };
+
+  useEffect(() => {
+    const levelImageUrl = `/skateparks/skate-park-l${currentLevel}.jpeg`;
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.style.backgroundImage = `url(${levelImageUrl})`;
+    }
+  }, [currentLevel]);
 
   function setWinner(winner: PlayerName | null) {
     dispatch({ type: "setWinner", payload: winner });
     dispatch({ type: "setStage", payload: "round-result" });
+
+    // Log the round details
+    const newRoundDescription = `## Round ${roundDescriptions.length + 1}: ${selectedAttribute}\n
+    ### ${playerOne.selectedFighter?.name} vs ${playerTwo.selectedFighter?.name}
+    \n*${winner === "playerOne"
+        ? `${playerOne.selectedFighter?.name} won*`
+        : winner === "playerTwo"
+        ? `${playerTwo.selectedFighter?.name} won*`
+        : "Draw*"
+    }`;
+    setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+
   }
 
   const paragraphAnimation: Variants = {
@@ -130,7 +163,7 @@ export function Game() {
 
   function getWinnerColor(isWinner: boolean | null): string {
     if (isWinner !== null) {
-      return isWinner ? "blue_300" : "red";
+      return isWinner ? "green_300" : "red";
     }
     return "yellow";
   }
@@ -156,30 +189,38 @@ export function Game() {
   }
 
   function handleNextRoundButtonClick() {
-    if (playerOne.fighters.length === 20) {
-      dispatch({ type: "setWinner", payload: "playerOne" });
-      dispatch({ type: "setIsEndGame", payload: true });
-      return;
-    } else if (playerTwo.fighters.length === 20) {
-      dispatch({ type: "setWinner", payload: "playerTwo" });
-      dispatch({ type: "setIsEndGame", payload: true });
-      return;
-    }
-
+    changeBackground();
     setIsRoundResultModalVisible(false);
-
     dispatch({ type: "setPlayerTwoSelectedFighter", payload: null });
     dispatch({ type: "setStage", payload: "attribute-selection" });
-
     if (playerOne.isWinner === null) {
       return;
     }
-
     exchangeLoserFighter();
     dispatch({ type: "setWinner", payload: null });
+
+    if ((playerOne.fighters.length === 19) && (playerOne.isWinner)) {
+      dispatch({ type: "setWinner", payload: "playerOne" });
+      dispatch({ type: "setIsEndGame", payload: true });
+      const newRoundDescription = "Congratulations! You Win!";
+      setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+      return;
+    } else if ((playerTwo.fighters.length === 19) && (playerTwo.isWinner)) {
+      dispatch({ type: "setWinner", payload: "playerTwo" });
+      dispatch({ type: "setIsEndGame", payload: true });
+      const newRoundDescription = "You Loose!";
+      setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+      return;
+    }
+  }
+
+  function handlePostResultsSkateHive(){
+    console.log(roundDescriptions);
+    handleEndGameButtonClick();
   }
 
   function handleEndGameButtonClick() {
+    setRoundDescriptions([]);
     setIsRoundResultModalVisible(false);
     dispatch({ type: "resetGame" });
   }
@@ -202,7 +243,7 @@ export function Game() {
   }
 
   function getRandomAttribute() {
-    const attributes = ["force", "defense", "mobility"];
+    const attributes = ["style", "agility", "speed"];
     const randomIndex = Math.floor(Math.random() * attributes.length);
     return attributes[randomIndex];
   }
@@ -219,14 +260,14 @@ export function Game() {
         if (turn === "playerTwo") {
           const attribute = getRandomAttribute();
           dispatch({ type: "setSelectedAttribute", payload: attribute });
-          setMessage("Select your fighter");
+          setMessage("Select your Skater");
           break;
         }
         dispatch({ type: "setSelectedAttribute", payload: null });
-        setMessage("Select your fighter and attribute");
+        setMessage("Select your Skater and Attribute");
         break;
       case "fighterTwo-selection":
-        setMessage("Selecting Fighter Two...");
+        setMessage("Battling against...");
         break;
       case "round-result":
         setMessage("Result");
@@ -239,7 +280,7 @@ export function Game() {
   useEffect(() => {
     if (stage !== "fighterOne-selection") return;
 
-    setMessage(`Select ${10 - playerOne.fighters.length} fighters`);
+    setMessage(`Select Skater ${10 - playerOne.fighters.length}`);
 
     if (playerOne.fighters.length === 10) {
       dispatch({ type: "setStage", payload: "attribute-selection" });
@@ -275,7 +316,7 @@ export function Game() {
         <p>{message}</p>
         <Fighters />
         <Button
-          title="Fight!!"
+          title="Battle!!"
           onClick={handleFightButtonClick}
           isVisible={isFightButtonVisible}
         />
@@ -307,28 +348,36 @@ export function Game() {
         </Modal>
       )}
 
-      {isEndGame && (
-        <Modal>
-          <Animation
-            autoplay
-            keepLastFrame
-            style={{ width: "24rem", height: "24rem" }}
-            src={
-              playerOne.isWinner
-                ? "https://assets9.lottiefiles.com/packages/lf20_touohxv0.json"
-                : "https://assets4.lottiefiles.com/packages/lf20_q1i4uDv2pj.json"
-            }
-          ></Animation>
-          <strong
-            style={{
-              color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
-            }}
-          >
-            {playerOne.isWinner ? "You're the champion!" : "You're the loser"}
-          </strong>
-          <Button title="Reset Game" onClick={handleEndGameButtonClick} />
-        </Modal>
-      )}
+{isEndGame && (
+  <Modal>
+    <Animation
+      autoplay
+      keepLastFrame
+      style={{ width: "24rem", height: "24rem" }}
+      src={
+        playerOne.isWinner
+          ? "https://assets9.lottiefiles.com/packages/lf20_touohxv0.json"
+          : "https://assets4.lottiefiles.com/packages/lf20_q1i4uDv2pj.json"
+      }
+    ></Animation>
+    <strong
+      style={{
+        color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
+      }}
+    >
+      {playerOne.isWinner ? "You're the champion!" : "You're the loser"}
+    </strong>
+    {/* <div style={{ textAlign: "left", marginTop: "1rem" }}>
+      <h4>Game Log:</h4>
+      <ul>
+          <p>{roundDescriptions}</p>
+      </ul>
+    </div> */}
+    <Button title="Continue" onClick={handleEndGameButtonClick} />
+    <Button title="Post results in Skatehive" onClick={handlePostResultsSkateHive} />
+    
+  </Modal>
+)}
     </Container>
   );
 }

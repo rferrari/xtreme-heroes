@@ -26,7 +26,7 @@ export const FighterCard = styled(motion.button)<FighterCard>`
   border: 1px solid ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   background-color: ${({ theme }) => theme.colors.blue_700};
-  background-size: 300%;
+  background-size: 150%;
   background-position: 75% top;
   background-image: ${({ image }) => `url(${image})`};
 
@@ -35,7 +35,7 @@ export const FighterCard = styled(motion.button)<FighterCard>`
   border: 1px solid
     ${({ isPlayerOne, isPlayerTwo, theme }) =>
       isPlayerOne || isPlayerTwo
-        ? theme.colors[isPlayerOne ? "blue_300" : "red"]
+        ? theme.colors[isPlayerOne ? "green_300" : "red"] 
         : theme.colors.white};
 
   display: flex;

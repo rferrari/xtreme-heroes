@@ -1,9 +1,9 @@
 import { ReactNode, createContext, useContext, useReducer } from "react";
 
 interface Attributes {
-  force: number;
-  defense: number;
-  mobility: number;
+  style: number;
+  agility: number;
+  speed: number;
 }
 
 export interface Fighter {
@@ -148,11 +148,6 @@ function GameReducer(state: GameState, action: GameAction) {
       return {
         ...state,
         turn: action.payload,
-      };
-    case "setIsEndGame":
-      return {
-        ...state,
-        isEndGame: action.payload,
       };
     case "setIsEndGame":
       return {

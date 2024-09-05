@@ -21,10 +21,12 @@ export const Container = styled.main`
     height: 6rem;
   }
 
+  /* atribute middle big name creepster */
   p#attribute > span {
-    color: ${({ theme }) => theme.colors.purple};
-    font-size: 2.4rem;
+    color: ${({ theme }) => theme.colors.green};
+    font-size: 4.5rem;
     text-transform: uppercase;
+    font-family: 'Creepster', cursive;
   }
 
   .middle {
@@ -40,6 +42,6 @@ export const Container = styled.main`
     font-size: 2.4rem;
     text-align: center;
 
-    margin: 0 0 3.6rem;
+    margin: 0 0 0.7rem;
   }
 `;

@@ -13,7 +13,7 @@ export const Container = styled.div<Player>`
   position: relative;
 
   > div {
-    height: 64rem;
+    height: 65rem;
   }
 
   transition: filter 1s;
@@ -38,7 +38,7 @@ export const Background = styled(motion.div)<Background>`
   transform: ${({ isBot }) => (isBot ? "scaleX(-1)" : "scaleX(1)")};
 
   background: ${({ isBot, theme }) => {
-    const color = theme.colors[isBot ? "red" : "blue_300"];
+    const color = theme.colors[isBot ? "red" : "green_300"];  //
     return `linear-gradient(90deg, ${color}, transparent 95%)`;
   }};
 `;
@@ -51,7 +51,7 @@ interface SelectedFighter {
 
 export const SelectedFighter = styled(motion.div)<SelectedFighter>`
   width: 100%;
-  padding: ${({ isBot }) => (isBot ? "0 0 0 8rem" : "0 8rem 0 0")};
+  padding: ${({ isBot }) => (isBot ? "0 0 0 8rem" : "0 2rem 0 0")};
 
   position: absolute;
   order: ${({ isBot }) => (isBot ? 1 : 2)};
@@ -104,7 +104,7 @@ export const Attributes = styled.div`
   border-radius: 8px;
   opacity: 0.9;
 
-  transform: skew(-15deg);
+  /* transform: skew(-15deg);*/
 
   dl {
     width: 100%;
@@ -183,7 +183,7 @@ export const Stat = styled.span<Stat>`
   height: 1.2rem;
   background: ${({ isFilled, isSelected, color, theme }) => {
     if (isFilled) {
-      return isSelected ? color : "linear-gradient(90deg, #9b28a1, #d638dd)";
+      return isSelected ? color : "linear-gradient(90deg, #214000, #30E000)"; // player atributes box green colors
     } else {
       return theme.colors.gray;
     }
@@ -222,7 +222,7 @@ export const Placeholder = styled.div<Placeholder>`
 export const Fighters = styled(motion.div)`
   width: 100%;
   height: 8rem !important;
-  padding: 0 4rem;
+  padding: 0 2rem;
 
   display: flex;
   flex-wrap: wrap;
@@ -246,7 +246,7 @@ export const FighterCard = styled(motion.button)<FighterCard>`
   border-radius: 8px;
   background-image: ${({ image }) => `url(${image})`};
   background-color: ${({ theme }) => theme.colors.blue_700};
-  background-size: 300%;
+  background-size: 150%;
   background-position: 75% top;
 
   pointer-events: ${({ isBot }) => (isBot ? "none" : "auto")};

@@ -21,9 +21,10 @@ export const Container = styled(motion.button)<Button>`
 
   pointer-events: ${({ isDisable }) => (isDisable ? "none" : "auto")};
 
+  /* button */
   &:hover {
-    color: ${({ theme }) => theme.colors.purple};
-    border-color: ${({ theme }) => theme.colors.purple};
+    color: ${({ theme }) => theme.colors.green};
+    border-color: ${({ theme }) => theme.colors.green};   
   }
 
   & + & {
