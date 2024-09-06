@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useGame, Fighter, PlayerName } from "../../hooks/useGame";
+import theme from "../../styles/theme";
 
 import { Player } from "../Player";
 import { Fighters } from "../Fighters";
+import { ItemsStore } from "../ItemStore";
+
 import { Button } from "../Button";
 import { Modal } from "../Modal";
 
@@ -14,20 +17,53 @@ import { Player as Animation } from "@lottiefiles/react-lottie-player";
 import { Variants, motion } from "framer-motion";
 import { Container } from "./styles";
 import { fighters } from "../../utils/fighters";
-import theme from "../../styles/theme";
-import { Checkbox } from "../Player/styles";
+
+import CountdownTimer from "../CountdownTimer";
+
+import { useAioha } from '@aioha/react-ui'
 
 export function Game() {
-  const {
-    state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
-    dispatch,
+  const { state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
+      dispatch,
   } = useGame();
 
+  const { user } = useAioha();
+
   const [currentLevel, setCurrentLevel] = useState(1);
-  const [message, setMessage] = useState("Select your 10 skaters");
+  const [message, setMessage] = useState("Select 10 skaters");
   const [isFightButtonVisible, setIsFightButtonVisible] = useState(false);
   const [isRoundResultModalVisible, setIsRoundResultModalVisible] = useState(false);
   const selectedFightersIds = useRef<number[]>([]);
+  const [isRecovered, setIsRecovered] = useState(false);
+  // const [cooldownSeconds, setCooldownSeconds] = useState(60); // Set your cooldown time in seconds
+
+
+  // const agilitySentences = [
+  //   "Obstacle ahead, time to show your",
+  //   "Can you dodge this? Let's see your",
+  //   "Quick reflexes needed! Show your",
+  //   "Hurdle in your way, show your"
+  // ];
+  
+  // const styleSentences = [
+  //   "Sponsor's watching, show off your",
+  //   "Looking good, time to flash your",
+  //   "Let's see if you've got that swag. Show your",
+  //   "Sponsors love a show. Let's see some"
+  // ];
+  
+  // const speedSentences = [
+  //   "Cops are on your tail, bolt with your",
+  //   "Time to outrun the law, show your",
+  //   "Can you keep up? Show your",
+  //   "No time to slow down, hit 'em with your"
+  // ];
+
+  // Function to get a random sentence from the list
+  // function getRandomSentence(sentences: string[]): string {
+  //   const randomIndex = Math.floor(Math.random() * sentences.length);
+  //   return sentences[randomIndex];
+  // }
 
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
@@ -52,17 +88,17 @@ export function Game() {
     dispatch({ type: "setWinner", payload: winner });
     dispatch({ type: "setStage", payload: "round-result" });
 
-    // Log the round details
-    const newRoundDescription = `## Round ${roundDescriptions.length + 1}: ${selectedAttribute}\n
-    ### ${playerOne.selectedFighter?.name} vs ${playerTwo.selectedFighter?.name}
-    \n*${winner === "playerOne"
-        ? `${playerOne.selectedFighter?.name} won*`
-        : winner === "playerTwo"
-        ? `${playerTwo.selectedFighter?.name} won*`
-        : "Draw*"
-    }`;
-    setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+    // Generate markdown for each round
+    let RoundX = roundDescriptions.length+1;
+    const newRoundDescription = `
+## Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***
+\n
+| ![${playerOne.selectedFighter?.name}](https://images.hive.blog/u/${playerOne.selectedFighter?.name}/avatar) | **VS** | ![${playerTwo.selectedFighter?.name}](https://images.hive.blog/u/${playerTwo.selectedFighter?.name}/avatar) |
+|-|-|-|
+| **${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} | | **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"} |
+`;
 
+    setRoundDescriptions((prev) => [...prev, newRoundDescription]);
   }
 
   const paragraphAnimation: Variants = {
@@ -127,7 +163,37 @@ export function Game() {
     dispatch({ type: "setPlayerTwoSelectedFighter", payload: fighter });
   }
 
+  function canPlayAgain() {
+    const nextGameTime = localStorage.getItem('recoveryAt');
+    if (!nextGameTime) {
+      return true; // No countdown means the user can play
+    }
+  
+    const now = new Date();
+    const countdownEnd = new Date(nextGameTime);
+    return now >= countdownEnd; // True if the current time is after the countdown
+  }
+  
+  
+  //   const now = new Date();
+  //   const countdownEnd = new Date(nextGameTime);
+  //   const canPlay = now >= countdownEnd;
+
+  //   console.log("is recovered? "+ isRecovered);
+  //   console.log("can play? "+ canPlay);
+
+  //   setisRecovered(canPlay);
+  //   return canPlay; // Return true if the current time is after the countdown
+  // } 
+
   async function handleFightButtonClick() {
+    if (!canPlayAgain()) {
+      setIsRecovered(false);  // Start the cooldown period
+      // setCooldownSeconds(60); // Reset cooldown time
+      alert("You must wait until the cooldown ends to play again.");
+      return;
+    }
+
     dispatch({ type: "setStage", payload: "fighterTwo-selection" });
 
     try {
@@ -146,6 +212,10 @@ export function Game() {
       console.error(error);
     }
   }
+
+  const handleCooldownComplete = () => {
+    setIsRecovered(true);
+  };
 
   function getModalAnimation(isWinner: boolean | null) {
     if (isWinner !== null) {
@@ -202,24 +272,58 @@ export function Game() {
     if ((playerOne.fighters.length === 19) && (playerOne.isWinner)) {
       dispatch({ type: "setWinner", payload: "playerOne" });
       dispatch({ type: "setIsEndGame", payload: true });
-      const newRoundDescription = "Congratulations! You Win!";
+      const newRoundDescription = "## Congratulations! You Win!";
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
     } else if ((playerTwo.fighters.length === 19) && (playerTwo.isWinner)) {
       dispatch({ type: "setWinner", payload: "playerTwo" });
       dispatch({ type: "setIsEndGame", payload: true });
-      const newRoundDescription = "You Loose!";
+      const newRoundDescription = "## You Loose!";
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
     }
   }
 
-  function handlePostResultsSkateHive(){
-    console.log(roundDescriptions);
+  function handlePostResultsSkateHive() {
+    // Join all roundDescriptions into a single markdown string
+    var myResultsPost = roundDescriptions.join('\n');
+    let finalRounds = roundDescriptions.length-1;
+
+    var word_define = "";
+    if (finalRounds <= 10) {
+      word_define = "easy";
+    } else if (finalRounds > 10 && finalRounds <= 15) {
+      word_define = "challenging";
+    } else if (finalRounds > 15 && finalRounds <= 20) {
+      word_define = "hard-fought";
+    } else {
+      word_define = "super incredible";
+    }
+
+    const myResultsPostTitle = `My ${finalRounds-1} Rounds ${import.meta.env.VITE_APPNAME} Result`;
+    myResultsPost = `In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **Skatehive**, we had an ${word_define} match! Here are the results:`
+                    +myResultsPost
+
+    // Log the markdown for debugging
+    console.log(myResultsPostTitle);
+    console.log(myResultsPost);
+    // Handle the end game button click or any other logic
     handleEndGameButtonClick();
   }
 
   function handleEndGameButtonClick() {
+
+    // Determine the recovery time based on win/loss
+    const now = new Date();
+    const recoveryTime = playerOne.isWinner === true ? 10 : 45; // 10 minutes for win, 45 for loss
+    const recoveryAt = new Date(now.getTime() + recoveryTime * 60000); // Convert minutes to milliseconds
+    // Store recovery time in state and localStorage
+    dispatch({ type: "setRecoveryAt", payload: recoveryAt });
+    localStorage.setItem('recoveryAt', recoveryAt.toISOString());
+
+    setIsRecovered(false);  // Start the cooldown period
+    //setCooldownSeconds(60); // Reset cooldown time
+
     setRoundDescriptions([]);
     setIsRoundResultModalVisible(false);
     dispatch({ type: "resetGame" });
@@ -260,7 +364,7 @@ export function Game() {
         if (turn === "playerTwo") {
           const attribute = getRandomAttribute();
           dispatch({ type: "setSelectedAttribute", payload: attribute });
-          setMessage("Select your Skater");
+          setMessage("Select Skater");
           break;
         }
         dispatch({ type: "setSelectedAttribute", payload: null });
@@ -278,9 +382,10 @@ export function Game() {
   }, [stage]);
 
   useEffect(() => {
+    //if(!canPlayAgain()) return;
     if (stage !== "fighterOne-selection") return;
 
-    setMessage(`Select Skater ${10 - playerOne.fighters.length}`);
+    setMessage(`@${user} select Skater ${10 - playerOne.fighters.length}`);
 
     if (playerOne.fighters.length === 10) {
       dispatch({ type: "setStage", payload: "attribute-selection" });
@@ -302,6 +407,7 @@ export function Game() {
       />
 
       <div className="middle">
+
         <motion.p
           variants={paragraphAnimation}
           animate={selectedAttribute ? "visible" : "invisible"}
@@ -309,17 +415,55 @@ export function Game() {
           style={{ pointerEvents: selectedAttribute ? "auto" : "none" }}
           id="attribute"
         >
-          The attribute of this round is
-          <br />
-          <span>{selectedAttribute}</span>
+
+          <p style={{color:'yellow', fontSize:'0.9em'}}>
+          {(() => {
+            if (turn === "playerOne") return;
+            switch (selectedAttribute) {
+              case "agility":
+                // return getRandomSentence(agilitySentences);
+                return "Obstacle ahead, time to show your";
+              case "style":
+                // return getRandomSentence(styleSentences);
+                return "Sponsor's watching, show off your";
+              case "speed":
+                // return getRandomSentence(speedSentences);
+                return "Cops are on your tail, bolt with your";
+              default:
+                return `The attribute of this round is: ${selectedAttribute}`;
+            }
+          })()}</p><span>{selectedAttribute}</span>
+          {/* !isRecovered ? (
+            <span>Recovering Breath</span>
+          ) : (    
+            <span>{selectedAttribute}</span>
+          ) */}
         </motion.p>
-        <p>{message}</p>
+
+        <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>{message}</p>
+
+        {!isRecovered ? (
+        <ItemsStore />  
+        ) : (  
         <Fighters />
-        <Button
-          title="Battle!!"
-          onClick={handleFightButtonClick}
-          isVisible={isFightButtonVisible}
-        />
+        )}
+
+        {!isRecovered ? (
+          <CountdownTimer onComplete={handleCooldownComplete} />
+        ) : (
+          <Button title="Battle!!"
+            onClick={handleFightButtonClick}
+            isVisible={isFightButtonVisible}
+          />
+        )}
+
+        {/*!isRecovered ? (
+            <CountdownTimer />
+        ) : (*/}
+          {/* <Button title="Battle!!"
+            onClick={handleFightButtonClick}
+            isVisible={isFightButtonVisible}
+          /> */}
       </div>
 
       <Player
@@ -365,16 +509,11 @@ export function Game() {
         color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
       }}
     >
-      {playerOne.isWinner ? "You're the champion!" : "You're the loser"}
+      {playerOne.isWinner ? "You're the champion! Now you need a 10 minutes break to catch your breath" 
+                          : "You're Busted! Will spend 45 minutes in Jail."}
     </strong>
-    {/* <div style={{ textAlign: "left", marginTop: "1rem" }}>
-      <h4>Game Log:</h4>
-      <ul>
-          <p>{roundDescriptions}</p>
-      </ul>
-    </div> */}
-    <Button title="Continue" onClick={handleEndGameButtonClick} />
-    <Button title="Post results in Skatehive" onClick={handlePostResultsSkateHive} />
+    <Button title="Share Results" onClick={handlePostResultsSkateHive} />
+    <Button title="Close" onClick={handleEndGameButtonClick} />
     
   </Modal>
 )}

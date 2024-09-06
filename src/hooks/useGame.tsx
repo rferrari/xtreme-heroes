@@ -1,5 +1,21 @@
 import { ReactNode, createContext, useContext, useReducer } from "react";
 
+import { initAioha } from '@aioha/aioha'
+import { AiohaProvider } from '@aioha/react-ui'
+import '@aioha/react-ui/dist/build.css'
+
+const aioha = initAioha({
+  hiveauth: {
+    name: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
+    description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
+  },
+  hivesigner: {
+    app: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
+    callbackURL: window.location.origin + '/',
+    scope: ['login', 'posting']
+  }
+})
+
 interface Attributes {
   style: number;
   agility: number;
@@ -39,6 +55,7 @@ type GameAction =
   | { type: "setTurn"; payload: PlayerName }
   | { type: "setIsEndGame"; payload: boolean }
   | { type: "setStage"; payload: Stage }
+  | { type: "setRecoveryAt"; payload: Date | null }
   | { type: "resetGame" };
 
 interface GameProviderProps {
@@ -53,6 +70,7 @@ interface GameState {
   stage: Stage;
   turn: PlayerName;
   isEndGame: boolean;
+  recoveryAt: Date | null; // Add recoveryAt to state
 }
 
 const initialState: GameState = {
@@ -67,6 +85,7 @@ const initialState: GameState = {
   stage: "fighterOne-selection",
   turn: "playerOne",
   isEndGame: false,
+  recoveryAt: null, // Initialize as null
 };
 
 interface Context {
@@ -154,6 +173,11 @@ function GameReducer(state: GameState, action: GameAction) {
         ...state,
         isEndGame: action.payload,
       };
+    case "setRecoveryAt":
+      return {
+        ...state,
+        recoveryAt: action.payload,
+      };
     case "resetGame":
     default:
       return initialState;
@@ -162,9 +186,15 @@ function GameReducer(state: GameState, action: GameAction) {
 
 export function GameProvider({ children }: GameProviderProps) {
   const [state, dispatch] = useReducer(GameReducer, initialState);
-
   const value = { state, dispatch };
-  return <GameContext.Provider value={value}>{children}</GameContext.Provider>;
+
+  return (
+      <GameContext.Provider value={value}>
+        <AiohaProvider aioha={aioha}>
+          {children}
+        </AiohaProvider>
+      </GameContext.Provider>
+  )
 }
 
 export function useGame() {

@@ -11,6 +11,8 @@
     "start": "vite preview --port 5000"
   },
   "dependencies": {
+    "@aioha/aioha": "^1.5.4",
+    "@aioha/react-ui": "^1.4.3",
     "@lottiefiles/react-lottie-player": "^3.5.3",
     "framer-motion": "^10.12.18",
     "react": "^18.2.0",

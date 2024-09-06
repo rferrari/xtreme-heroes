@@ -18,7 +18,7 @@ export const Container = styled.main`
 
   p#attribute {
     font-size: 2.4rem;
-    height: 6rem;
+    height: 7rem;
   }
 
   /* atribute middle big name creepster */

@@ -1,15 +1,15 @@
 import { Fighter, useGame } from "../../hooks/useGame";
 import { Container, FighterCard } from "./styles";
-import { fighters } from "../../utils/fighters";
+import { items } from "../../utils/items";
 
-export function Fighters() {
+export function ItemsStore() {
   const {
     state: { playerOne, playerTwo, stage },
     dispatch,
   } = useGame();
 
-  function getFighter(id: number) {
-    return fighters.find((fighter) => fighter.id === id)!;
+  function getItems(id: number) {
+    return items.find((items) => items.id === id)!;
   }
 
   function setPlayerOneSelectedFighter(fighter: Fighter | null) {
@@ -21,7 +21,7 @@ export function Fighters() {
   }
 
   function handleFighterMouseOver(id: number) {
-    const fighter: Fighter = getFighter(id);
+    const fighter: Fighter = getItems(id);
     setPlayerOneSelectedFighter(fighter);
   }
 
@@ -32,18 +32,18 @@ export function Fighters() {
 
   function handleFighterClick(id: number) {
     if (stage === "fighterOne-selection") {
-      const fighter: Fighter = getFighter(id);
+      const fighter: Fighter = getItems(id);
       setPlayerOneSelectedFighter(fighter);
       setPlayerOneFighters(fighter);
     } else if (stage === "attribute-selection") {
-      const fighter: Fighter = getFighter(id);
+      const fighter: Fighter = getItems(id);
       setPlayerOneSelectedFighter(fighter);
     }
   }
 
   return (
     <Container>
-      {fighters.map(({ id, image }) => {
+      {items.map(({ id, image }) => {
         const isPlayerOne = playerOne.fighters.some(
           (fighter) => fighter.id === id
         );
@@ -55,7 +55,7 @@ export function Fighters() {
         return (
           <FighterCard
             key={id}
-            image={`/skaters/${image}`}
+            image={`/items/${image}`}
             isPlayerOne={isPlayerOne}
             isPlayerTwo={isPlayerTwo}
             disabled={stage !== "fighterOne-selection"}

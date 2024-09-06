@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Button } from "../Button";
 
-export default function CountdownTimer() {
+type CountdownTimerProps = {
+  onComplete: () => void;
+};
+
+export default function CountdownTimer({ onComplete }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<number>(0); // Time in seconds
 
   useEffect(() => {
-    const nextGameAvailableAt = localStorage.getItem('nextGameAvailableAt');
+    const nextGameAvailableAt = localStorage.getItem('recoveryAt');
 
     if (nextGameAvailableAt) {
       const countdownEndTime = new Date(nextGameAvailableAt).getTime();
@@ -18,15 +22,16 @@ export default function CountdownTimer() {
           setTimeLeft(Math.floor(difference / 1000)); // Convert ms to seconds
         } else {
           setTimeLeft(0); // Countdown has finished
+          onComplete(); // Trigger when countdown finishes
         }
       };
 
       updateCountdown();
       const intervalId = setInterval(updateCountdown, 1000); // Update every second
 
-      return () => clearInterval(intervalId); // Clear the interval when component unmounts
+      return () => clearInterval(intervalId); // Clear interval on component unmount
     }
-  }, []);
+  }, [onComplete]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -38,11 +43,11 @@ export default function CountdownTimer() {
     <div>
       {timeLeft > 0 ? (
         <Button title={formatTime(timeLeft)}
-            onClick={() => {}}  // Empty function
+            onClick={() => {}}  // Disable button click during countdown
             isVisible={true}
           />
       ) : (
-        <p></p>
+        <p></p> // Or you can render nothing here once the countdown is done
       )}
     </div>
   );
