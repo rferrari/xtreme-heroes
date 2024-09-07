@@ -32,21 +32,63 @@ const LoadingScreen = () => {
 const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   const [modalDisplayed, setModalDisplayed] = useState(false)
   const { user, aioha } = useAioha()
+  const [purchasedVIP, setPurchasedVIP] = useState<string[]>([]);
 
   const listVIP = fighters.map(fighter => fighter.name);
-  const isVIP = user && listVIP.includes(user);
+  const combinedVIPList = [...listVIP, ...purchasedVIP];
+  const isVIP = user && combinedVIPList.includes(user);
   // console.log(listVIP);
 
-  async function handlePurchaseVIPTicket() {
-    const xfer = await aioha.transfer(
-      'skatedev', 
-      10, Asset.HIVE, 
-      'Xtreme-Heroes VIP Ticket');
-    console.log(xfer);
+  // Function to fetch the updated VIP list
+  let fetchCount = 0;
+
+  async function fetchVIPList() {
+    if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
+    fetchCount++;
+
+    try {
+      const response = await fetch('/api/getVIPList'); // Assuming you have a /getVIPList API
+      if (response.ok) {
+        const data = await response.json();
+        setPurchasedVIP(data.purchasedVIP); // Update the purchasedVIP state with new data
+      } else {
+        console.error('Failed to fetch VIP list');
+      }
+    } catch (error) {
+      console.error('Error fetching VIP list:', error);
+    }
   }
 
+  async function handlePurchaseVIPTicket() {
+    try {
+      const xfer = await aioha.transfer('vaipraonde', 0.001, Asset.HIVE, 'Xtreme-Heroes VIP Ticket');
+      if (xfer.success !== true ) console.log(xfer);//return;
+
+      const response = await fetch('/api/addVIPUser', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify({ user }),
+      });
+
+      if (response.ok) {
+        console.log('Username added to VIP list');
+        // Reload the updated VIP list after successfully adding the user
+        await fetchVIPList();
+      } else {
+        console.error('Failed to add username');
+      }
+    } catch (error) {
+      console.error('Transfer failed:', error);
+    }
+  }
+
+  // Fetch the VIP list when the component mounts
+  useEffect(() => {
+    fetchVIPList();
+  }, []);
+  
   //
-  // login
+  // login render
   //
   return (
     <div className="login-container"
@@ -147,8 +189,9 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
                 padding: "1em",
               }}
             >
-              Sorry, {user}, you are not on the VIP list.
+              Sorry, {user}, you are not on the Beta Testers VIP list.
               <span style={{ display: "block" }}>Wait for Game Release or Purchase VIP Ticket</span>
+              <span style={{ display: "block" }}>to support developers and have fun playing</span>
             </p>
             <button
               style={{
@@ -162,7 +205,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
               }}
               onClick={() => handlePurchaseVIPTicket()}
             >
-              Take my Money!!!
+              Shut up and take my money!!!
               <img
                 src="/items/skate-pass.png"
                 alt="Skate Pass Ticket"
