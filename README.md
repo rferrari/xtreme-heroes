@@ -1,6 +1,7 @@
 <h1 align="center">
-    Tekken Top Trumps Game 🤜👊🤛
+   Skatehive Top Trumps Game
 </h1>
+<h2>inpired by JohnPetros`s Top Trumps Game</h2>
 
 <div align="center">
    <a href="https://github.com/JohnPetros">
