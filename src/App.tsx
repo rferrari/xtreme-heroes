@@ -40,42 +40,47 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   // console.log(listVIP);
 
   // Function to fetch the updated VIP list
-  let fetchCount = 0;
+  // let fetchCount = 0;
 
   async function fetchVIPList() {
-    if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
-    fetchCount++;
+  //   if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
+    // fetchCount++;
 
     try {
-      const response = await fetch('/api/getVIPList'); // Assuming you have a /getVIPList API
-      if (response.ok) {
-        const data = await response.json();
+      // const response = await fetch('/api/getVIPList'); // Assuming you have a /getVIPList API
+      // if (response.ok) {
+        // const data = await response.json();
+        var data = {
+          purchasedVIP: ["", ""]
+        };
         setPurchasedVIP(data.purchasedVIP); // Update the purchasedVIP state with new data
-      } else {
-        console.error('Failed to fetch VIP list');
-      }
+      // } else {
+        // console.error('Failed to fetch VIP list');
+      // }
     } catch (error) {
-      console.error('Error fetching VIP list:', error);
+      // console.error('Error fetching VIP list:', error);
     }
   }
 
   async function handlePurchaseVIPTicket() {
     try {
-      const xfer = await aioha.transfer('vaipraonde', 0.001, Asset.HIVE, 'Xtreme-Heroes VIP Ticket');
-      if (xfer.success !== true ) console.log(xfer);//return;
+      const xfer = await aioha.transfer('vaipraonde', 8.888, Asset.HIVE, 'Xtreme-Heroes VIP Ticket');
+      if (xfer.success !== true ) 
+        console.log(xfer);//return;
 
-      const response = await fetch('/api/addVIPUser', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify({ user }),
-      });
+      // const response = await fetch('/api/addVIPUser', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json', },
+      //   body: JSON.stringify({ user }),
+      // });
 
-      if (response.ok) {
-        console.log('Username added to VIP list');
+      // if (response.ok) {
+      if (xfer.success) {
+        console.log('Username will be added to VIP list: '+ user);
         // Reload the updated VIP list after successfully adding the user
         await fetchVIPList();
       } else {
-        console.error('Failed to add username');
+        console.error('Failed to add username: '+ user);
       }
     } catch (error) {
       console.error('Transfer failed:', error);
@@ -193,7 +198,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
               <span style={{ display: "block" }}>Wait for Game Release or Purchase VIP Ticket</span>
               <span style={{ display: "block" }}>to support developers and have fun playing</span>
             </p>
-            <button
+            <motion.button
               style={{
                 padding: "0.2rem 0.2rem",
                 fontFamily: "creepster",
@@ -202,6 +207,14 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
                 fontSize: "2.5rem",
                 margin: '0em auto', // Centers horizontally
                 border: "0px solid",
+              }}
+              animate={{
+                scale: [1, 1.1, 1], // Scale from 1 to 1.1 and back to 1
+              }}
+              transition={{
+                duration: 1, // Duration of 1 second for the full pulse
+                repeat: Infinity, // Infinite loop
+                repeatType: "loop", // Continuous looping
               }}
               onClick={() => handlePurchaseVIPTicket()}
             >
@@ -216,7 +229,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
                   height: 'auto'
                 }}
               />
-            </button>
+            </motion.button>
           </>
         ) : null}
       </div>
