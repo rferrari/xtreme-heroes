@@ -63,11 +63,11 @@ This is a **Skaters Top Trumps Card Game**, inspired by [JohnPetros' Tekken Top 
 
 ---
 
-## 🕹️ Game Play
+## 🕹️ Game Play Look and Feel
 
-|![](.github/preview1.png)|![](.github/preview2.png)|
+|![Loading](.github/preview0.png)|![Connect Wallet/Login](.github/preview1.png)|
 |-|-|
-|![](.github/preview3.png)|![](.github/preview4.png)|
+|![Select your Skaters](.github/preview2.png)|![Timeout Cooldown](.github/preview3.png)|
 
 ---
 
@@ -75,7 +75,7 @@ This is a **Skaters Top Trumps Card Game**, inspired by [JohnPetros' Tekken Top 
 
 ### Prerequisites
 
-You'll need a package manager like [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/) to install and run the app.
+You'll need a package manager like pnpm to install and run the app.
 
 ```bash
 # Clone this repository
@@ -85,12 +85,18 @@ $ git clone https://github.com/rferrari/xtreme-heroes.git
 $ cd xtreme-heroes
 
 # Install dependencies
-$ npm install or yarn add
+$ pnpm install
 
 # Run the app in development mode
-$ npm run dev or yarn dev
+$ pnpm dev
 
 # The app will be running on http://localhost:5173
+
+# Build the app for production
+$ pnpm build
+
+# Start the app in procution development mode
+$ pnpm start
 ```
 
 ---
