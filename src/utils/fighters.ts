@@ -13,7 +13,7 @@ export const fighters = [
   { id: 12, name: "beaglexv", image: "beaglexv.jpeg", attributes:             { style: 70, agility: 70, speed: 70 } }, // 210 (higher for balance)
   { id: 13, name: "vasconsa", image: "vasconsa.jpeg", attributes:             { style: 60, agility: 60, speed: 60 } }, // 180
   { id: 14, name: "grafvisionsp", image: "grafvisionsp.jpeg", attributes:     { style: 60, agility: 70, speed: 50 } }, // 180
-  { id: 15, name: "xlet", image: "xlet.jpeg", attributes:                     { style: 60, agility: 60, speed: 60 } }, // 180
+  { id: 15, name: "xlety", image: "xlety.jpeg", attributes:                   { style: 60, agility: 60, speed: 60 } }, // 180
   { id: 16, name: "pamtech", image: "pamtech.jpeg", attributes:               { style: 70, agility: 65, speed: 60 } }, // 195
   { id: 17, name: "blessskateshop", image: "blessskateshop.jpeg", attributes: { style: 60, agility: 50, speed: 80 } }, // 190
   { id: 18, name: "diegodigocuts", image: "diegodigocuts.jpeg", attributes:   { style: 60, agility: 50, speed: 80 } }, // 190
