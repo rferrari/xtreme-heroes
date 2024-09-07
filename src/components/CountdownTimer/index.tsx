@@ -3,6 +3,7 @@ import { Button } from "../Button";
 
 type CountdownTimerProps = {
   onComplete: () => void;
+  // onCheck: () => void;
 };
 
 export default function CountdownTimer({ onComplete }: CountdownTimerProps) {
@@ -27,9 +28,12 @@ export default function CountdownTimer({ onComplete }: CountdownTimerProps) {
       };
 
       updateCountdown();
+      // onCheck();
       const intervalId = setInterval(updateCountdown, 1000); // Update every second
 
       return () => clearInterval(intervalId); // Clear interval on component unmount
+    } else {
+      onComplete(); // Trigger when countdown finishes
     }
   }, [onComplete]);
 

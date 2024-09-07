@@ -1,4 +1,5 @@
-import { Fighter, useGame } from "../../hooks/useGame";
+/*
+import { Item, useGame } from "../../hooks/useGame";
 import { Container, FighterCard } from "./styles";
 import { items } from "../../utils/items";
 
@@ -12,16 +13,16 @@ export function ItemsStore() {
     return items.find((items) => items.id === id)!;
   }
 
-  function setPlayerOneSelectedFighter(fighter: Fighter | null) {
-    dispatch({ type: "setPlayerOneSelectedFighter", payload: fighter });
+  function setPlayerOneSelectedFighter(item: Item | null) {
+    dispatch({ type: "setPlayerOneSelectedItem", payload: Item });
   }
 
-  function setPlayerOneFighters(newFighter: Fighter) {
-    dispatch({ type: "setPlayerOneFighters", payload: newFighter });
+  function setPlayerOneFighters(newFighter: Item) {
+    dispatch({ type: "setPlayerOneItem", payload: newFighter });
   }
 
   function handleFighterMouseOver(id: number) {
-    const fighter: Fighter = getItems(id);
+    const fighter: Item = getItems(id);
     setPlayerOneSelectedFighter(fighter);
   }
 
@@ -32,11 +33,11 @@ export function ItemsStore() {
 
   function handleFighterClick(id: number) {
     if (stage === "fighterOne-selection") {
-      const fighter: Fighter = getItems(id);
+      const fighter: Item = getItems(id);
       setPlayerOneSelectedFighter(fighter);
       setPlayerOneFighters(fighter);
     } else if (stage === "attribute-selection") {
-      const fighter: Fighter = getItems(id);
+      const fighter: Item = getItems(id);
       setPlayerOneSelectedFighter(fighter);
     }
   }
@@ -70,3 +71,4 @@ export function ItemsStore() {
     </Container>
   );
 }
+*/

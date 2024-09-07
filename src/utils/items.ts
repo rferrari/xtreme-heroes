@@ -4,9 +4,8 @@ export const items = [
     name: "lawyer",
     image: "better-call-saul.png",
     attributes: {
-      style: 160,
-      agility: 180,
-      speed: 150,
+      price: 160,
+      time: 180,
     },
   },
   {
@@ -14,20 +13,18 @@ export const items = [
     name: "Energetic Drink",
     image: "energetic.png",
     attributes: {
-      style: 80,
-      agility: 60,
-      speed: 70,
+      price: 160,
+      time: 180,
     },
 
   },
   {
     id: 3,
-    name: "Bailout",
+    name: "Bail out",
     image: "key.png",
     attributes: {
-      style: 60,
-      agility: 50,
-      speed: 60,
+      price: 160,
+      time: 180,
     },
   },
   {
@@ -35,9 +32,8 @@ export const items = [
     name: "HotDog",
     image: "hotdog.png",
     attributes: {
-      style: 90,
-      agility: 60,
-      speed: 60,
+      price: 160,
+      time: 180,
     },
   },
   {
@@ -45,9 +41,8 @@ export const items = [
     name: "Hamburguer",
     image: "hamburguer.png",
     attributes: {
-      style: 60,
-      agility: 40,
-      speed: 80,
+      price: 160,
+      time: 180,
     },
   },
   {
@@ -55,9 +50,8 @@ export const items = [
     name: "Water",
     image: "water.png",
     attributes: {
-      style: 50,
-      agility: 30,
-      speed: 70,
+      price: 160,
+      time: 180,
     },
   },
 ];

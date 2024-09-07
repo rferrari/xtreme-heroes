@@ -5,15 +5,15 @@ import { AiohaProvider } from '@aioha/react-ui'
 import '@aioha/react-ui/dist/build.css'
 
 const aioha = initAioha({
-  hiveauth: {
-    name: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
-    description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
-  },
-  hivesigner: {
-    app: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
-    callbackURL: window.location.origin + '/',
-    scope: ['login', 'posting']
-  }
+  // hiveauth: {
+  //   name: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
+  //   description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
+  // },
+  // hivesigner: {
+  //   app: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
+  //   callbackURL: window.location.origin + '/',
+  //   scope: ['login', 'posting']
+  // }
 })
 
 interface Attributes {
@@ -30,6 +30,21 @@ export interface Fighter {
     [attributeName: string]: number;
   };
 }
+
+/*
+interface ItemAttributes {
+  price: number;
+  time: number;
+}
+
+export interface Item {
+  id: number;
+  name: string;
+  image: string;
+  attributes: ItemAttributes & {
+    [attributeName: string]: number;
+  };
+}*/
 
 export interface Player {
   selectedFighter: Fighter | null;
@@ -50,6 +65,8 @@ type GameAction =
   | { type: "setPlayerTwoSelectedFighter"; payload: Fighter | null }
   | { type: "setPlayerOneFighters"; payload: Fighter }
   | { type: "setPlayerTwoFighters"; payload: Fighter }
+  // | { type: "setPlayerOneSelectedItem"; payload: Fighter | null }
+  // | { type: "setPlayerOneItem"; payload: Fighter }
   | { type: "setSelectedAttribute"; payload: string | null }
   | { type: "setWinner"; payload: PlayerName | null }
   | { type: "setTurn"; payload: PlayerName }
@@ -111,20 +128,34 @@ function GameReducer(state: GameState, action: GameAction) {
         ...state,
         playerOne: { ...state.playerOne, selectedFighter: action.payload },
       };
+      // case "setPlayerOneSelectedItem":
+      //   return {
+      //     ...state,
+      //     playerOne: { ...state.playerOne, selectedItem: action.payload },
+      //   };
     case "setPlayerTwoSelectedFighter":
       return {
         ...state,
         playerTwo: { ...state.playerTwo, selectedFighter: action.payload },
       };
-    case "setPlayerOneFighters":
-      const playerOneUpdatedFighters = getUpdatedFighters(
-        state.playerOne.fighters,
-        action.payload
-      );
-      return {
-        ...state,
-        playerOne: { ...state.playerOne, fighters: playerOneUpdatedFighters },
-      };
+      case "setPlayerOneFighters":
+        const playerOneUpdatedFighters = getUpdatedFighters(
+          state.playerOne.fighters,
+          action.payload
+        );
+        return {
+          ...state,
+          playerOne: { ...state.playerOne, fighters: playerOneUpdatedFighters },
+        };
+        // case "setPlayerOneItems":
+        //   const playerOneUpdatedItems = getUpdatedFighters(
+        //     state.playerOne.fighters,
+        //     action.payload
+        //   );
+        //   return {
+        //     ...state,
+        //     playerOne: { ...state.playerOne, fighters: playerOneUpdatedItems },
+        //   };
     case "setPlayerTwoFighters":
       const playerTwoUpdatedFighters = getUpdatedFighters(
         state.playerTwo.fighters,
@@ -187,6 +218,14 @@ function GameReducer(state: GameState, action: GameAction) {
 export function GameProvider({ children }: GameProviderProps) {
   const [state, dispatch] = useReducer(GameReducer, initialState);
   const value = { state, dispatch };
+
+  // hack. not sure how to init the jail message
+  // const [recoveryMessage, setRecoveryMessage] = useState("");
+  // const restMessage = "Skateboarding life is tough! You need to get some rest."
+  // const jailMessage = "Looks like the grind was too real! Welcome to your new sponsor: the county jail. Better brush up on your cell block ollies!"
+  // const nextGameType = localStorage.getItem('recoveryType');// as NextGameInterval | null;
+  // if (nextGameType && nextGameType === 'jail') setRecoveryMessage(jailMessage);
+  // else setRecoveryMessage(restMessage); console.log("GameProvider hack: recovery message: "+recoveryMessage);
 
   return (
       <GameContext.Provider value={value}>

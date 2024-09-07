@@ -3,47 +3,60 @@ import { Game } from "./components/Game";
 import { GameProvider } from "./hooks/useGame";
 import { ThemeProvider } from "styled-components";
 import { motion } from "framer-motion"; // Import framer-motion for animation
+
 import GlobalStyles from "./styles/global";
 import theme from "./styles/theme";
 
-
 import { useAioha, AiohaModal } from '@aioha/react-ui'
-import { KeyTypes } from '@aioha/aioha'
-// import { Button, useColorMode } from '@chakra-ui/react'
+import { Asset, KeyTypes } from '@aioha/aioha'
 
-const listVIP = [
-  "vaipraonde", 
-  "devferri", 
-  "xvlad"
-];
+import { fighters } from "./utils/fighters";
 
 // Loading Screen
 const LoadingScreen = () => {
   return (
-    <div className="loading-container" 
-          style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
-        <div style={{ position: "relative", zIndex: 1, color: "#fff", textAlign: "center", paddingTop: "20%" }}></div>
-            <div style={{ fontSize: "10rem", textAlign: "center", 
-                    color:"green", fontFamily:"creepster" }}>
-              Loading...</div>;
+    <div className="loading-container"
+      style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      <div style={{ position: "relative", zIndex: 1, color: "#fff", textAlign: "center", paddingTop: "20%" }}></div>
+      <div style={{
+        fontSize: "10rem", textAlign: "center",
+        color: "green", fontFamily: "creepster",
+        textShadow: "2px 2px 4px white"
+      }}>
+        Loading...</div>;
     </div>
-)};
+  )
+};
 
 // Login Screen with Framer Motion Animation
 const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   const [modalDisplayed, setModalDisplayed] = useState(false)
-  const { user } = useAioha()
-  const isVIP = user && listVIP.includes(user);
+  const { user, aioha } = useAioha()
 
+  const listVIP = fighters.map(fighter => fighter.name);
+  const isVIP = user && listVIP.includes(user);
+  // console.log(listVIP);
+
+  async function handlePurchaseVIPTicket() {
+    const xfer = await aioha.transfer(
+      'skatedev', 
+      10, Asset.HIVE, 
+      'Xtreme-Heroes VIP Ticket');
+    console.log(xfer);
+  }
+
+  //
+  // login
+  //
   return (
-    <div
-      className="login-container"
-      style={{ position: "relative", height: "100vh", overflow: "hidden" }}
+    <div className="login-container"
+      style={{ position: "relative", height: "100vh", overflow: "hidden", 
+      display: "flex", flexDirection: "column" }}
     >
       {/* Panoramic background effect */}
       <motion.div
         initial={{ x: "0%" }}
-        animate={{ x: ["0%", "-80%"] }} // Panoramic effect
+        animate={{ x: ["0%", "-100%"] }} // Panoramic effect
         transition={{ repeat: Infinity, duration: 120, ease: "linear" }} // Linear panoramic view
         style={{
           width: "200%",
@@ -57,34 +70,41 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
         }}
       />
   
-      {/* Login content */}
+      {/* Main content */}
       <div
         style={{
-          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center", // Vertically center content
+          alignItems: "center", // Horizontally center content
+          flex: 1, // Take up remaining space
           zIndex: 1,
-          color: "yellow",
+          // color: "green",
           textAlign: "center",
-          paddingTop: "10%",
         }}
       >
         <h1
           style={{
-            marginBottom: "20px",
+            // marginBottom: "1em",
             fontFamily: "creepster",
-            color: "green",
+            color: "yellow",
             fontSize: "32px",
-            textShadow: "2px 2px 4px yellow",
-            alignContent: "center",
+            textShadow: "2px 2px 4px black",
           }}
         >
-          Please Login
+          {user ? "Welcome" : "Please Login"}
         </h1>
   
         <button
-          style={{ padding: "1rem 2rem", 
-            fontSize: "2.5rem", 
+          style={{
+            padding: "1rem 2rem",
+            fontSize: "2.5rem",
             fontFamily: "creepster",
-            border: "1px solid yellow" }}
+            color: "yellow",
+            marginBottom: "1.5em",
+            textShadow: "2px 2px 4px black",
+            border: "1px solid yellow"
+          }}
           onClick={() => setModalDisplayed(true)}
         >
           {user ?? "Connect Wallet"}
@@ -92,80 +112,102 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   
         {/* VIP Logic */}
         {isVIP ? (
-          <>
-          <button
-            onClick={onLogin}
-            style={{
-              padding: "1rem 2rem",
-              border: "1px solid yellow",
-              fontFamily: "creepster",
-              fontSize: "2.5rem",
-              marginLeft: "2em",
-            }}
-          >
-            Start
-          </button>
-          <p style={{paddingBottom:"10em"}}></p>
-          </>
+          <motion.button
+  onClick={onLogin}
+  style={{
+    padding: "1rem 2rem",
+    border: "1px solid white",
+    color: "yellow",
+    textShadow: "2px 2px 4px red",
+    fontFamily: "creepster",
+    fontSize: "2.5rem",
+    margin: '1em auto',
+  }}
+  animate={{
+    scale: [1, 1.1, 1], // Scale from 1 to 1.1 and back to 1
+  }}
+  transition={{
+    duration: 1, // Duration of 1 second for the full pulse
+    repeat: Infinity, // Infinite loop
+    repeatType: "loop", // Continuous looping
+  }}
+>
+  Kickflip In
+</motion.button>
         ) : user ? (
           <>
             <p
-              style={{ 
-                marginBottom: "20px",
+              style={{
+                marginBottom: "0.1em",
                 fontFamily: "creepster",
-                fontSize: "32px",
+                fontSize: "22px",
+                fontWeight: "bold",
                 color: "white",
-                textShadow: "2px 2px 4px yellow",
-                alignContent: "center", padding: "1em", 
+                textShadow: "2px 2px 4px black",
+                padding: "1em",
               }}
             >
               Sorry, {user}, you are not on the VIP list.
+              <span style={{ display: "block" }}>Wait for Game Release or Purchase VIP Ticket</span>
             </p>
             <button
               style={{
-                padding: "1rem 2rem",
+                padding: "0.2rem 0.2rem",
                 fontFamily: "creepster",
+                color: "yellow",
+                textShadow: "2px 2px 4px black",
                 fontSize: "2.5rem",
-                marginLeft: "2em",
-                border: "1px solid",
+                margin: '0em auto', // Centers horizontally
+                border: "0px solid",
               }}
-              onClick={() => alert("Purchase Ticket")}
+              onClick={() => handlePurchaseVIPTicket()}
             >
-              Purchase Ticket
+              Take my Money!!!
+              <img
+                src="/items/skate-pass.png"
+                alt="Skate Pass Ticket"
+                style={{
+                  display: 'block',
+                  margin: '0px auto', // Centers horizontally
+                  width: '158px',
+                  height: 'auto'
+                }}
+              />
             </button>
           </>
-        ) : (
-          <p style={{paddingBottom:"10em"}}></p>
-        )}
-  
-        {/* Footer Credits */}
-        <div
-          style={{
-            position: "relative",
-            bottom: "-10em",
-            textAlign: "center",
-            color: "silver",
-          }}
-        >
-          <p>
-            Designed by @vaipraonde | Game Engine: JohnPetros | Skatehive Devs:
-            @devferri @mengao @xvlad @alexandrefeliz @louzado @r4topunk
-          </p>
-        </div>
-  
-        {/* Modal for login */}
-        <AiohaModal
-          displayed={modalDisplayed}
-          loginOptions={{
-            msg: "Login",
-            keyType: KeyTypes.Posting,
-          }}
-          onLogin={console.log}
-          onClose={setModalDisplayed}
-        />
+        ) : null}
       </div>
+  
+      {/* Footer Credits */}
+      <div
+        style={{
+          textAlign: "center",
+          color: "silver",
+          marginTop: "auto", // Pushes footer to the bottom
+          paddingBottom: "1em", // Adds some padding to the bottom
+          zIndex:'1'
+        }}
+      >
+        <p>
+          Designed by @vaipraonde | Game Engine: JohnPetros | Skatehive Devs:
+          @devferri @mengao @xvlad @alexandrefeliz @louzado @r4topunk
+        </p>
+      </div>
+  
+      {/* Modal for login */}
+      <AiohaModal
+        displayed={modalDisplayed}
+        loginOptions={{
+          msg: "Login",
+          keyType: KeyTypes.Posting,
+        }}
+        onLogin={console.log}
+        onClose={setModalDisplayed}
+      />
     </div>
   );
+  
+  
 }
 
 export function App() {
@@ -193,18 +235,19 @@ export function App() {
         ) : !isLoggedIn ? (
           <LoginScreen onLogin={handleLogin} />
         ) : (
-          <Game />
+          // <Game />
+          <Game setIsLoggedIn={setIsLoggedIn} /> // Pass setIsLoggedIn as a prop to Game
         )}
 
 
         <AiohaModal
-            displayed={modalDisplayed}
-            loginOptions={{
-                msg: 'Login',
-                keyType: KeyTypes.Posting
-            }}
-            onLogin={console.log}
-            onClose={setModalDisplayed}
+          displayed={modalDisplayed}
+          loginOptions={{
+            msg: 'Login',
+            keyType: KeyTypes.Posting
+          }}
+          onLogin={console.log}
+          onClose={setModalDisplayed}
         />
 
       </GameProvider>

@@ -1,0 +1,205 @@
+export const fighters = [
+  {
+    id: 1,
+    name: "xvlad",
+    image: "xvlad.jpeg",
+    attributes: {
+      style: 60,
+      agility: 80,
+      speed: 50,
+    },
+  },
+  {
+    id: 2,
+    name: "alexandrefeliz",
+    image: "alexandrefeliz.jpeg",
+    attributes: {
+      style: 80,
+      agility: 60,
+      speed: 70,
+    },
+
+  },
+  {
+    id: 3,
+    name: "mengao",
+    image: "mengao.jpeg",
+    attributes: {
+      style: 60,
+      agility: 50,
+      speed: 60,
+    },
+  },
+  {
+    id: 4,
+    name: "vaipraonde",
+    image: "vaipraonde.jpeg",
+    attributes: {
+      style: 90,
+      agility: 60,
+      speed: 60,
+    },
+  },
+  {
+    id: 5,
+    name: "devferri",
+    image: "devferri.jpeg",
+    attributes: {
+      style: 60,
+      agility: 40,
+      speed: 80,
+    },
+  },
+  {
+    id: 6,
+    name: "r4topunk",
+    image: "r4topunk.jpeg",
+    attributes: {
+      style: 50,
+      agility: 30,
+      speed: 70,
+    },
+  },
+  {
+    id: 7,
+    name: "skatedev",
+    image: "skatedev.jpeg",
+    attributes: {
+      style: 80,
+      agility: 50,
+      speed: 60,
+    },
+  },
+  {
+    id: 8,
+    name: "xeraifuma",
+    image: "xeraifuma.jpeg",
+    attributes: {
+      style: 60,
+      agility: 30,
+      speed: 70,
+    },
+  },
+  {
+    id: 9,
+    name: "ezekhiveadict",
+    image: "ezekhiveadict.jpeg",
+    attributes: {
+      style: 50,
+      agility: 90,
+      speed: 20,
+    },
+  },
+  {
+    id: 10,
+    name: "louzado",
+    image: "louzado.jpeg",
+    attributes: {
+      style: 30,
+      agility: 50,
+      speed: 60,
+    },
+  },
+  {
+    id: 11,
+    name: "laribf",
+    // image: "skater-nft-bc36-4225-9f1f-b765d44efce2.jpeg",
+    image: "laribf.jpeg",
+    attributes: {
+      style: 60,
+      agility: 40,
+      speed: 60,
+    },
+  },
+  {
+    id: 12,
+    name: "beaglexv",
+    image: "beaglexv.jpeg",
+    attributes: {
+      style: 70,
+      agility: 60,
+      speed: 80,
+    },
+  },
+  {
+    id: 13,
+    name: "vasconsa",
+    image: "vasconsa.jpeg",
+    attributes: {
+      style: 40,
+      agility: 40,
+      speed: 50,
+    },
+  },
+  {
+    id: 14,
+    name: "grafvisionsp",
+    image: "grafvisionsp.jpeg",
+    attributes: {
+      style: 50,
+      agility: 70,
+      speed: 40,
+    },
+  },
+  {
+    id: 15,
+    name: "xlet",
+    image: "xlet.jpeg",
+    //image: "skater-nft-15cc-4a42-b98a-65f421b8ef32.jpeg", // image: "skater-nft-try-435e-9858-3d609d49aeb6.jpeg",
+    attributes: {
+      style: 70,
+      agility: 60,
+      speed: 60,
+    },
+  },
+  {
+    id: 16,
+    name: "pamtech",
+    image: "pamtech.jpeg",
+    attributes: {
+      style: 70,
+      agility: 60,
+      speed: 60,
+    },
+  },
+  {
+    id: 17,
+    name: "blessskateshop",
+    image: "blessskateshop.jpeg",
+    attributes: {
+      style: 40,
+      agility: 20,
+      speed: 30,
+    },
+  },
+  {
+    id: 18,
+    name: "diegodigocuts",
+    image: "diegodigocuts.jpeg",
+    attributes: {
+      style: 50,
+      agility: 20,
+      speed: 70,
+    },
+  },
+  {
+    id: 19,
+    name: "web-gnar",
+    image: "web-gnar.jpeg",
+    attributes: {
+      style: 60,
+      agility: 70,
+      speed: 50,
+    },
+  },
+  {
+    id: 20,
+    name: "boeltermc",
+    image: "boeltermc.jpeg",
+    attributes: {
+      style: 70,
+      agility: 80,
+      speed: 90,
+    },
+  },
+];

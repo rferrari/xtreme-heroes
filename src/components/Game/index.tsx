@@ -4,7 +4,7 @@ import theme from "../../styles/theme";
 
 import { Player } from "../Player";
 import { Fighters } from "../Fighters";
-import { ItemsStore } from "../ItemStore";
+// import { ItemsStore } from "../ItemStore";
 
 import { Button } from "../Button";
 import { Modal } from "../Modal";
@@ -20,62 +20,70 @@ import { fighters } from "../../utils/fighters";
 
 import CountdownTimer from "../CountdownTimer";
 
-import { useAioha } from '@aioha/react-ui'
+import { useAioha } from '@aioha/react-ui';
 
-export function Game() {
-  const { state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
+type NextGameInterval =
+  | "jail"
+  | "rest";
+
+  interface GameProps {
+    setIsLoggedIn: (value: boolean) => void;
+  }
+
+// export function Game() {
+export function Game({ setIsLoggedIn }: GameProps) {
+  const { 
+      state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
       dispatch,
   } = useGame();
 
-  const { user } = useAioha();
-
+  const { user, aioha } = useAioha();
   const [currentLevel, setCurrentLevel] = useState(1);
   const [message, setMessage] = useState("Select 10 skaters");
+
   const [isFightButtonVisible, setIsFightButtonVisible] = useState(false);
   const [isRoundResultModalVisible, setIsRoundResultModalVisible] = useState(false);
   const selectedFightersIds = useRef<number[]>([]);
-  const [isRecovered, setIsRecovered] = useState(false);
-  // const [cooldownSeconds, setCooldownSeconds] = useState(60); // Set your cooldown time in seconds
-
-
-  // const agilitySentences = [
-  //   "Obstacle ahead, time to show your",
-  //   "Can you dodge this? Let's see your",
-  //   "Quick reflexes needed! Show your",
-  //   "Hurdle in your way, show your"
-  // ];
+  const [taskMessage, setCoolTask] = useState('');
   
-  // const styleSentences = [
-  //   "Sponsor's watching, show off your",
-  //   "Looking good, time to flash your",
-  //   "Let's see if you've got that swag. Show your",
-  //   "Sponsors love a show. Let's see some"
-  // ];
-  
-  // const speedSentences = [
-  //   "Cops are on your tail, bolt with your",
-  //   "Time to outrun the law, show your",
-  //   "Can you keep up? Show your",
-  //   "No time to slow down, hit 'em with your"
-  // ];
-
-  // Function to get a random sentence from the list
-  // function getRandomSentence(sentences: string[]): string {
-  //   const randomIndex = Math.floor(Math.random() * sentences.length);
-  //   return sentences[randomIndex];
-  // }
+  const [isRecovered, setIsRecovered] = useState(true);
+  const restMessage = "Skateboarding life is tough! You need to get some rest."
+  const jailMessage = "Looks like the grind was too real! Welcome to your new sponsor: the county jail. Better brush up on your cell block ollies!"
+  const [recoveryMessage, setRecoveryMessage] = useState(restMessage);
 
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
 
- // Function to change the background image
+  // Function to change the background image
   const changeBackground = () => {
-    setCurrentLevel(prevLevel => {
-      const nextLevel = prevLevel === 5 ? 1 : prevLevel + 1;
-      return nextLevel;
-    });
+   setCurrentLevel(prevLevel => {
+     const nextLevel = prevLevel === 5 ? 1 : prevLevel + 1;
+     return nextLevel;
+   });
   };
 
+
+  const agilitySentences = [
+    "Obstacle ahead, time to show your",  "Can you dodge this? Let's see your",
+    "Quick reflexes needed! Show your",   "Hurdle in your way, show your"
+  ];
+  
+  const styleSentences = [
+    "Sponsor's watching, show off your",            "Looking good, time to flash your",
+    "Let's see if you've got that swag. Show your", "Sponsors love a show. Let's see some"
+  ];
+  
+  const speedSentences = [
+    "Cops are on your tail, bolt with your",    "Time to outrun the law, show your",
+    "Can you keep up? Show your",               "No time to slow down, hit 'em with your"
+  ];
+
+  // Function to get a random sentence from the list
+  function getRandomSentence(sentences: string[]): string {
+    const randomIndex = Math.floor(Math.random() * sentences.length);
+    return sentences[randomIndex];
+  }
+  
   useEffect(() => {
     const levelImageUrl = `/skateparks/skate-park-l${currentLevel}.jpeg`;
     const rootElement = document.getElementById('root');
@@ -90,15 +98,23 @@ export function Game() {
 
     // Generate markdown for each round
     let RoundX = roundDescriptions.length+1;
-    const newRoundDescription = `
+
+/*    
+    const newRoundDescription_PictureMode = `
 ## Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***
 \n
 | ![${playerOne.selectedFighter?.name}](https://images.hive.blog/u/${playerOne.selectedFighter?.name}/avatar) | **VS** | ![${playerTwo.selectedFighter?.name}](https://images.hive.blog/u/${playerTwo.selectedFighter?.name}/avatar) |
 |-|-|-|
 | **${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} | | **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"} |
 `;
-
     setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+*/
+
+const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
+|**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
+||||`;
+
+    setRoundDescriptions((prev) => [...prev, newRoundDescription_NoPicMode]);
   }
 
   const paragraphAnimation: Variants = {
@@ -165,15 +181,19 @@ export function Game() {
 
   function canPlayAgain() {
     const nextGameTime = localStorage.getItem('recoveryAt');
+    const nextGameType = localStorage.getItem('recoveryType') as NextGameInterval | null;
+
     if (!nextGameTime) {
       return true; // No countdown means the user can play
     }
   
+    if (nextGameType && nextGameType === 'jail')
+      setRecoveryMessage(jailMessage);
+
     const now = new Date();
     const countdownEnd = new Date(nextGameTime);
     return now >= countdownEnd; // True if the current time is after the countdown
   }
-  
   
   //   const now = new Date();
   //   const countdownEnd = new Date(nextGameTime);
@@ -190,7 +210,7 @@ export function Game() {
     if (!canPlayAgain()) {
       setIsRecovered(false);  // Start the cooldown period
       // setCooldownSeconds(60); // Reset cooldown time
-      alert("You must wait until the cooldown ends to play again.");
+      // alert("You must wait until the cooldown ends to play again.");
       return;
     }
 
@@ -216,6 +236,12 @@ export function Game() {
   const handleCooldownComplete = () => {
     setIsRecovered(true);
   };
+
+  // const handleCooldownCheck = () => {
+  //   const nextGameType = localStorage.getItem('recoveryType') as NextGameInterval | null;
+  //   if (nextGameType && nextGameType === 'jail')
+  //     setRecoveryMessage(jailMessage);
+  // };
 
   function getModalAnimation(isWinner: boolean | null) {
     if (isWinner !== null) {
@@ -273,18 +299,51 @@ export function Game() {
       dispatch({ type: "setWinner", payload: "playerOne" });
       dispatch({ type: "setIsEndGame", payload: true });
       const newRoundDescription = "## Congratulations! You Win!";
+      defineNextGameInterval('rest');
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
     } else if ((playerTwo.fighters.length === 19) && (playerTwo.isWinner)) {
       dispatch({ type: "setWinner", payload: "playerTwo" });
       dispatch({ type: "setIsEndGame", payload: true });
       const newRoundDescription = "## You Loose!";
+      defineNextGameInterval('jail');
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
     }
   }
 
-  function handlePostResultsSkateHive() {
+  async function shareResultsHive(title: string, post: string){
+    const pa = import.meta.env.VITE_THREAD_AUTHOR || "skatedev";
+    const pp = import.meta.env.VITE_THREAD_PERMLINK || "re-skatedev-sidr6t";
+    const appname = import.meta.env.VITE_APPNAME || "Xtreme-Heroes";
+    const appver = import.meta.env.VITE_APPVER || "1.0.1";
+    
+    const permlink = new Date()
+    .toISOString()
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
+
+    // Get registered providers
+    // console.log(aioha.getProviders())
+    // Get current logged in user and provider name
+    // if (aioha.isLoggedIn()) {
+      // console.log(aioha.getCurrentUser(), aioha.getCurrentProvider())
+    // }
+
+    //need to send title blank
+    title = "";
+    const commentResponse = await aioha.comment(
+      pa, pp, permlink, 
+      title, post,
+      { app:  `${appname}/${appver}`});
+
+      if (commentResponse.success===false)
+        console.error(commentResponse.error);
+
+    return (commentResponse.success === true);
+  }
+
+  async function handlePostResultsSkateHive() {
     // Join all roundDescriptions into a single markdown string
     var myResultsPost = roundDescriptions.join('\n');
     let finalRounds = roundDescriptions.length-1;
@@ -293,37 +352,58 @@ export function Game() {
     if (finalRounds <= 10) {
       word_define = "easy";
     } else if (finalRounds > 10 && finalRounds <= 15) {
-      word_define = "challenging";
-    } else if (finalRounds > 15 && finalRounds <= 20) {
       word_define = "hard-fought";
+    } else if (finalRounds > 15 && finalRounds <= 27) {
+      word_define = "challenging";
     } else {
       word_define = "super incredible";
     }
 
-    const myResultsPostTitle = `My ${finalRounds-1} Rounds ${import.meta.env.VITE_APPNAME} Result`;
-    myResultsPost = `In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **Skatehive**, we had an ${word_define} match! Here are the results:`
-                    +myResultsPost
+
+    const myResultsPostTitle = 
+`## My ${finalRounds-1} Rounds ${import.meta.env.VITE_APPNAME} Result`;
+
+    myResultsPost = 
+`${myResultsPostTitle}\n
+In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **Skatehive**, we had an ${word_define} match! Here are the results:
+\n
+||||
+|-|-|-|
+${myResultsPost}`;
 
     // Log the markdown for debugging
-    console.log(myResultsPostTitle);
+    //console.log(myResultsPostTitle);
     console.log(myResultsPost);
-    // Handle the end game button click or any other logic
+
+    shareResultsHive("", myResultsPost)
+    .then((results)=> {
+      console.log(results);
+      // if(results===false)
+        //return; //fail... stop or continue?
+    })
+
+    // Handle the end game button click
     handleEndGameButtonClick();
   }
 
-  function handleEndGameButtonClick() {
-
+  function defineNextGameInterval(timeoutType: NextGameInterval){
     // Determine the recovery time based on win/loss
     const now = new Date();
-    const recoveryTime = playerOne.isWinner === true ? 10 : 45; // 10 minutes for win, 45 for loss
+    const recoveryTime = timeoutType === "rest" ? 10 : 45; // 10 minutes for win, 45 for loss
     const recoveryAt = new Date(now.getTime() + recoveryTime * 60000); // Convert minutes to milliseconds
     // Store recovery time in state and localStorage
     dispatch({ type: "setRecoveryAt", payload: recoveryAt });
     localStorage.setItem('recoveryAt', recoveryAt.toISOString());
+    localStorage.setItem('recoveryType', timeoutType);
+
+    const recoveryMsg = timeoutType === "rest" ? restMessage : jailMessage; // 10 minutes for win, 45 for loss    
+    setRecoveryMessage(recoveryMsg);
 
     setIsRecovered(false);  // Start the cooldown period
-    //setCooldownSeconds(60); // Reset cooldown time
+    //setCooldownSeconds(60); // Reset cooldown time    
+  }
 
+  function handleEndGameButtonClick() {
     setRoundDescriptions([]);
     setIsRoundResultModalVisible(false);
     dispatch({ type: "resetGame" });
@@ -349,7 +429,26 @@ export function Game() {
   function getRandomAttribute() {
     const attributes = ["style", "agility", "speed"];
     const randomIndex = Math.floor(Math.random() * attributes.length);
-    return attributes[randomIndex];
+    // return attributes[randomIndex];
+    const attribute = attributes[randomIndex];
+
+    if (turn === "playerTwo") {
+      switch (attribute) {
+        case "agility":
+          setCoolTask(getRandomSentence(agilitySentences));
+          // return "Obstacle ahead, time to show your";
+          break;
+        case "style":
+          setCoolTask(getRandomSentence(styleSentences));
+          //return "Sponsor's watching, show off your";
+          break;
+        case "speed":
+          setCoolTask(getRandomSentence(speedSentences));
+          // return "Cops are on your tail, bolt with your";
+          break;
+      }
+    }
+    return attribute;
   }
 
   useEffect(() => {
@@ -369,6 +468,7 @@ export function Game() {
         }
         dispatch({ type: "setSelectedAttribute", payload: null });
         setMessage("Select your Skater and Attribute");
+        setCoolTask("");
         break;
       case "fighterTwo-selection":
         setMessage("Battling against...");
@@ -382,7 +482,6 @@ export function Game() {
   }, [stage]);
 
   useEffect(() => {
-    //if(!canPlayAgain()) return;
     if (stage !== "fighterOne-selection") return;
 
     setMessage(`@${user} select Skater ${10 - playerOne.fighters.length}`);
@@ -398,8 +497,34 @@ export function Game() {
     }
   }, [playerOne, stage]);
 
+  function handleQuitGame() {
+    const confirmation = window.confirm("You will lose the game. Are you sure you want to leave?");
+  
+    if (confirmation) {
+      handleEndGameButtonClick();
+      setIsLoggedIn(false); // Go back to login if the user confirms
+    }
+  }
+
   return (
     <Container>
+
+      <div style={{position:'absolute', zIndex: "101",}}>
+        <button
+          style={{
+            padding: "1rem 2rem",
+            fontSize: "1em",
+            fontFamily: "creepster",
+            border: "0px solid yellow",
+            color: "white"
+          }}
+          onClick={() => handleQuitGame()}
+        >
+         I Quit!
+          {/* {user ?? "Connect Wallet"} */}
+        </button>
+      </div>
+
       <Player
         selectedFighter={playerOne.selectedFighter}
         fighters={playerOne.fighters}
@@ -417,39 +542,39 @@ export function Game() {
         >
 
           <p style={{color:'yellow', fontSize:'0.9em'}}>
-          {(() => {
-            if (turn === "playerOne") return;
-            switch (selectedAttribute) {
-              case "agility":
-                // return getRandomSentence(agilitySentences);
-                return "Obstacle ahead, time to show your";
-              case "style":
-                // return getRandomSentence(styleSentences);
-                return "Sponsor's watching, show off your";
-              case "speed":
-                // return getRandomSentence(speedSentences);
-                return "Cops are on your tail, bolt with your";
-              default:
-                return `The attribute of this round is: ${selectedAttribute}`;
-            }
-          })()}</p><span>{selectedAttribute}</span>
-          {/* !isRecovered ? (
+            {taskMessage}
+          </p>
+          
+          {/* <span>{selectedAttribute}</span> */}
+
+          { !isRecovered ? (
             <span>Recovering Breath</span>
           ) : (    
             <span>{selectedAttribute}</span>
-          ) */}
+          )}
+
         </motion.p>
 
-        <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>{message}</p>
+        {!isRecovered ? (<>
+          <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>
+          {recoveryMessage}
+          </p></>
+        ) : (  
+        <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>
+          {message}
+        </p>
+        )}
 
-        {!isRecovered ? (
-        <ItemsStore />  
+        {!isRecovered ? (<></>
+        // <ItemsStore />  
         ) : (  
         <Fighters />
         )}
 
         {!isRecovered ? (
-          <CountdownTimer onComplete={handleCooldownComplete} />
+          <CountdownTimer onComplete={handleCooldownComplete} 
+          // onCheck={handleCooldownCheck} 
+          />
         ) : (
           <Button title="Battle!!"
             onClick={handleFightButtonClick}
@@ -509,11 +634,11 @@ export function Game() {
         color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
       }}
     >
-      {playerOne.isWinner ? "You're the champion! Now you need a 10 minutes break to catch your breath" 
-                          : "You're Busted! Will spend 45 minutes in Jail."}
+      {playerOne.isWinner ? "You're the champion!" 
+                          : "You're Busted!"}
     </strong>
     <Button title="Share Results" onClick={handlePostResultsSkateHive} />
-    <Button title="Close" onClick={handleEndGameButtonClick} />
+    <Button title="Continue" onClick={handleEndGameButtonClick} />
     
   </Modal>
 )}
