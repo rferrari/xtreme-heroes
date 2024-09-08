@@ -349,19 +349,18 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     let finalRounds = roundDescriptions.length-1;
 
     var word_define = "";
-    if (finalRounds <= 10) {
+    if (finalRounds <= 13) {
       word_define = "easy";
-    } else if (finalRounds > 10 && finalRounds <= 15) {
+    } else if (finalRounds > 13 && finalRounds <= 17) {
       word_define = "hard-fought";
-    } else if (finalRounds > 15 && finalRounds <= 27) {
+    } else if (finalRounds > 17 && finalRounds <= 22) {
       word_define = "challenging";
     } else {
       word_define = "super incredible";
     }
 
-
     const myResultsPostTitle = 
-`## My ${finalRounds-1} Rounds ${import.meta.env.VITE_APPNAME} Result`;
+`## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
 
     myResultsPost = 
 `${myResultsPostTitle}\n

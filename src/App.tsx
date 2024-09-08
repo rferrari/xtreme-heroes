@@ -33,13 +33,14 @@ const LoadingScreen = () => {
 // Login Screen with Framer Motion Animation
 const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   const [modalDisplayed, setModalDisplayed] = useState(false);
+  const [vipMessage, setVipMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user, aioha } = useAioha()
   const [purchasedVIP, setPurchasedVIP] = useState<string[]>([]);
-
   const listVIP = fighters.map(fighter => fighter.name);
   const combinedVIPList = [...listVIP, ...purchasedVIP];
   const isVIP = user && combinedVIPList.includes(user);
+
   // console.log(listVIP);
 
   // Function to fetch the updated VIP list
@@ -52,11 +53,12 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
     try {
         fetchUserPurchasedVIPTicket(user).then( (result) => {
           if (result){
-            console.log("found your vip ticket");
-            //setPurchasedVIP(user); // Update the purchasedVIP state with new data
+            console.log("VIP ticket was found to: "+ user);
+            setPurchasedVIP([...purchasedVIP, user]);
+            setVipMessage(user + " we found your VIP Ticket!");
           }
           else {
-            console.error('Failed to fetch VIP list');
+            console.log('VIP ticket Not Found to '+ user);
           }
         });
     } catch (error) {
@@ -70,19 +72,26 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   async function handlePurchaseVIPTicket() {
     if (!user) return;
     try {
-      const xfer = await aioha.transfer('vaipraonde', 8.888, Asset.HIVE, 'Xtreme-Heroes VIP Ticket');
-      if (xfer.success !== true ) 
-        console.log(xfer);//return;
+      const VIP_RECEIVER:string = String(import.meta.env.VITE_PURCHASE_VIP_TO);
+      const VIP_PRICE:number = Number(import.meta.env.VITE_PURCHASE_VIP_PRICE);
+      const VIP_MEMO:string = String(import.meta.env.VITE_PURCHASE_VIP_MEMO);
+
+      const xfer = await aioha.transfer( VIP_RECEIVER, VIP_PRICE, Asset.HIVE, VIP_MEMO);
+
+      if (xfer.success !== true ) {
+        console.log(xfer.error);
+        return;
+      }
 
       if (xfer.success) {
-        console.log('Username will be added to VIP list: '+ user);
+        console.log(`Wait, adding ${user} to VIP list`);
         // Reload the updated VIP list after successfully adding the user
         setIsLoading(true);
         setTimeout(() => {
           fetchVIPList();  
         }, 5000); // set timeout to search it after 5 seconds
       } else {
-        console.error('Failed to add username: '+ user);
+        console.log('Failed to add username: '+ user);
       }
     } catch (error) {
       console.error('Transfer failed:', error);
@@ -162,9 +171,19 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           {user ?? "Connect Wallet"}
         </button>
   
-        {isLoading && (
-          <div style={{zIndex:5}}>Loading...</div>
-        )}
+{vipMessage != "" && (
+  <p style={{
+    marginBottom: "0.1em",
+    fontFamily: "creepster",
+    fontSize: "22px",
+    fontWeight: "bold",
+    color: "white",
+    textShadow: "2px 2px 4px black",
+    padding: "1em",
+  }}>
+    {vipMessage}
+  </p>
+)}
 
         {/* VIP Logic */}
         {isVIP ? (
@@ -191,9 +210,8 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   Kickflip In
 </motion.button>
         ) : user ? (
-          <>
-            <p
-              style={{
+            <>
+            <p style={{
                 marginBottom: "0.1em",
                 fontFamily: "creepster",
                 fontSize: "22px",
@@ -239,7 +257,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
                 }}
               />
             </motion.button>
-          </>
+            </>
         ) : null}
       </div>
   
