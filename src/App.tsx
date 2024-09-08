@@ -75,6 +75,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
       const VIP_PRICE:number = Number(import.meta.env.VITE_PURCHASE_VIP_PRICE);
       const VIP_MEMO:string = String(import.meta.env.VITE_PURCHASE_VIP_MEMO);
 
+      console.log(VIP_PRICE);
       const xfer = await aioha.transfer( VIP_RECEIVER, VIP_PRICE, Asset.HIVE, VIP_MEMO);
 
       if (xfer.success !== true ) {
