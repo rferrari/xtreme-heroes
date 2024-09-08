@@ -60,21 +60,27 @@ export function Game({ setIsLoggedIn }: GameProps) {
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
 
     Howler.volume(0.0);
-    var sound = new Howl({src: [
+    var sfxBackgrooundMusic = new Howl({src: [
       '/soundfx/background.mp3', 
-      // '/soundfx/background.mp3'
     ]});
-  
+
+    var sfxOllie = new Howl({src: [
+      '/soundfx/ollie.mp3', 
+    ]});
+    Howler.volume(0.9);
+
   // Clear listener after first call.
-    sound.once('load', function(){
-     sound.play();
-      Howler.volume(0.5);
+    sfxBackgrooundMusic.once('load', function(){
+      sfxBackgrooundMusic.loop(true);
+      sfxBackgrooundMusic.play();
+      // Howler.volume(0.8);
     });
   
-  // Fires when the sound finishes playing.
-  // sound.on('end', function(){
-    // console.log('Finished!');
-  // });
+    // Fires when the sound finishes playing.
+    sfxBackgrooundMusic.on('end', function(){
+      console.log('looping background music');
+      //sfxBackgrooundMusic.play();
+    });
 
   // Function to change the background image
   const changeBackground = () => {
@@ -236,6 +242,7 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
       return;
     }
 
+    sfxOllie.play();
     dispatch({ type: "setStage", payload: "fighterTwo-selection" });
 
     try {
