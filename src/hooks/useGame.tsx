@@ -4,11 +4,6 @@ import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
 import '@aioha/react-ui/dist/build.css'
 
-import UIfx from 'uifx';
-import beepMp3 from './my-sounds/beep.mp3'
-
-const beep = new UIfx(beepMp3)
-
 const aioha = initAioha({
   hiveauth: {
     name: (import.meta.env.VITE_APPNAME || 'Xtreme-Heroes'),

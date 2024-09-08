@@ -36,6 +36,7 @@ const LoginScreen = lazy(() =>
 
 import { AiohaModal } from '@aioha/react-ui'
 import { KeyTypes } from '@aioha/aioha'
+import { Background } from "./components/Player/styles";
 
 // import { fighters } from "./utils/fighters";
 // import { fetchUserPurchasedVIPTicket } from "./utils/transactions";

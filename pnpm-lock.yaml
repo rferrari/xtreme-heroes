@@ -26,6 +26,9 @@ importers:
       framer-motion:
         specifier: ^10.12.18
         version: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      howler:
+        specifier: ^2.2.4
+        version: 2.2.4
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -35,9 +38,6 @@ importers:
       styled-components:
         specifier: ^6.0.1
         version: 6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      uifx:
-        specifier: ^2.0.7
-        version: 2.0.7
     devDependencies:
       '@types/express':
         specifier: ^4.17.21
@@ -1159,6 +1159,9 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
+  howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
+
   http-errors@2.0.0:
     resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
     engines: {node: '>= 0.8'}
@@ -1705,9 +1708,6 @@ packages:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
     engines: {node: '>=14.17'}
     hasBin: true
-
-  uifx@2.0.7:
-    resolution: {integrity: sha512-tnPwdYe1dDmsxWJeU84CjDN/rcWOzOcG6tL1bsi5bUXw5nJaq+c4ThsbShMkedX2dAQ5gq1Q5CxQGsxwa5wxfw==}
 
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -3093,6 +3093,8 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
+  howler@2.2.4: {}
+
   http-errors@2.0.0:
     dependencies:
       depd: 2.0.0
@@ -3590,8 +3592,6 @@ snapshots:
       mime-types: 2.1.35
 
   typescript@5.5.4: {}
-
-  uifx@2.0.7: {}
 
   undici-types@5.26.5: {}
 

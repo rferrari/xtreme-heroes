@@ -22,6 +22,11 @@ import CountdownTimer from "../CountdownTimer";
 
 import { useAioha } from '@aioha/react-ui';
 
+
+import { Howl, Howler } from 'howler';
+
+Howler.volume(0.0);
+
 type NextGameInterval =
   | "jail"
   | "rest";
@@ -53,6 +58,23 @@ export function Game({ setIsLoggedIn }: GameProps) {
 
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
+
+    Howler.volume(0.0);
+    var sound = new Howl({src: [
+      '/soundfx/background.mp3', 
+      // '/soundfx/background.mp3'
+    ]});
+  
+  // Clear listener after first call.
+    sound.once('load', function(){
+     sound.play();
+      Howler.volume(0.5);
+    });
+  
+  // Fires when the sound finishes playing.
+  // sound.on('end', function(){
+    // console.log('Finished!');
+  // });
 
   // Function to change the background image
   const changeBackground = () => {
