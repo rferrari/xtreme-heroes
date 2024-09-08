@@ -126,6 +126,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           backgroundSize: "cover",
           backgroundRepeat: "repeat-x",
           position: "absolute",
+          // backgroundPosition: "top left",
           top: 0,
           left: 0,
         }}
@@ -171,7 +172,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           {user ?? "Connect Wallet"}
         </button>
 
-{isLoading && (
+{(isLoading && user)&& (
   <p style={{
     marginBottom: "0.1em",
     fontFamily: "creepster",
@@ -181,7 +182,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
     textShadow: "2px 2px 4px black",
     padding: "1em",
   }}>
-    Searching your VIP Ticket...
+    Searching your VIP Ticket on Hive Blockchain...
   </p>
 )}
 
