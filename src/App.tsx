@@ -12,6 +12,8 @@ import { Asset, KeyTypes } from '@aioha/aioha'
 
 import { fighters } from "./utils/fighters";
 
+import { fetchUserPurchasedVIPTicket } from "./utils/transactions";
+
 // Loading Screen
 const LoadingScreen = () => {
   return (
@@ -30,7 +32,8 @@ const LoadingScreen = () => {
 
 // Login Screen with Framer Motion Animation
 const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
-  const [modalDisplayed, setModalDisplayed] = useState(false)
+  const [modalDisplayed, setModalDisplayed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { user, aioha } = useAioha()
   const [purchasedVIP, setPurchasedVIP] = useState<string[]>([]);
 
@@ -40,45 +43,44 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   // console.log(listVIP);
 
   // Function to fetch the updated VIP list
-  // let fetchCount = 0;
+  let fetchCount = 0;
 
   async function fetchVIPList() {
-  //   if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
-    // fetchCount++;
+    if (!user) return;
+    if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
 
     try {
-      // const response = await fetch('/api/getVIPList'); // Assuming you have a /getVIPList API
-      // if (response.ok) {
-        // const data = await response.json();
-        var data = {
-          purchasedVIP: ["", ""]
-        };
-        setPurchasedVIP(data.purchasedVIP); // Update the purchasedVIP state with new data
-      // } else {
-        // console.error('Failed to fetch VIP list');
-      // }
+        fetchUserPurchasedVIPTicket(user).then( (result) => {
+          if (result){
+            console.log("found your vip ticket");
+            //setPurchasedVIP(user); // Update the purchasedVIP state with new data
+          }
+          else {
+            console.error('Failed to fetch VIP list');
+          }
+        });
     } catch (error) {
-      // console.error('Error fetching VIP list:', error);
+      console.error('Error fetching VIP list:', error);
+      fetchCount++;
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function handlePurchaseVIPTicket() {
+    if (!user) return;
     try {
       const xfer = await aioha.transfer('vaipraonde', 8.888, Asset.HIVE, 'Xtreme-Heroes VIP Ticket');
       if (xfer.success !== true ) 
         console.log(xfer);//return;
 
-      // const response = await fetch('/api/addVIPUser', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json', },
-      //   body: JSON.stringify({ user }),
-      // });
-
-      // if (response.ok) {
       if (xfer.success) {
         console.log('Username will be added to VIP list: '+ user);
         // Reload the updated VIP list after successfully adding the user
-        await fetchVIPList();
+        setIsLoading(true);
+        setTimeout(() => {
+          fetchVIPList();  
+        }, 5000); // set timeout to search it after 5 seconds
       } else {
         console.error('Failed to add username: '+ user);
       }
@@ -89,8 +91,11 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
 
   // Fetch the VIP list when the component mounts
   useEffect(() => {
-    fetchVIPList();
-  }, []);
+    if (user) {
+      fetchVIPList();
+    }
+  }, [user]);
+  
   
   //
   // login render
@@ -116,7 +121,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           left: 0,
         }}
       />
-  
+
       {/* Main content */}
       <div
         style={{
@@ -157,6 +162,10 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           {user ?? "Connect Wallet"}
         </button>
   
+        {isLoading && (
+          <div style={{zIndex:5}}>Loading...</div>
+        )}
+
         {/* VIP Logic */}
         {isVIP ? (
           <motion.button
