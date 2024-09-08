@@ -170,7 +170,22 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
         >
           {user ?? "Connect Wallet"}
         </button>
-  
+
+{isLoading && (
+  <p style={{
+    marginBottom: "0.1em",
+    fontFamily: "creepster",
+    fontSize: "22px",
+    fontWeight: "bold",
+    color: "white",
+    textShadow: "2px 2px 4px black",
+    padding: "1em",
+  }}>
+    Searching your Ticket...
+  </p>
+)}
+
+
 {vipMessage != "" && (
   <p style={{
     marginBottom: "0.1em",
