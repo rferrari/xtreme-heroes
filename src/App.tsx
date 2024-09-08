@@ -34,7 +34,7 @@ const LoadingScreen = () => {
 const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   const [modalDisplayed, setModalDisplayed] = useState(false);
   const [vipMessage, setVipMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, aioha } = useAioha()
   const [purchasedVIP, setPurchasedVIP] = useState<string[]>([]);
   const listVIP = fighters.map(fighter => fighter.name);
@@ -60,12 +60,11 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
           else {
             console.log('VIP ticket Not Found to '+ user);
           }
+          setTimeout(() => setIsLoading(false), 2000);
         });
     } catch (error) {
       console.error('Error fetching VIP list:', error);
       fetchCount++;
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -181,7 +180,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
     textShadow: "2px 2px 4px black",
     padding: "1em",
   }}>
-    Searching your Ticket...
+    Searching your VIP Ticket...
   </p>
 )}
 
@@ -201,7 +200,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
 )}
 
         {/* VIP Logic */}
-        {isVIP ? (
+        {(isVIP && !isLoading) ? (
           <motion.button
   onClick={onLogin}
   style={{
@@ -224,7 +223,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
 >
   Kickflip In
 </motion.button>
-        ) : user ? (
+        ) : (user && !isLoading) ? (
             <>
             <p style={{
                 marginBottom: "0.1em",
