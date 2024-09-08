@@ -117,12 +117,12 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
       <motion.div
         initial={{ x: "0%" }}
         animate={{ x: ["0%", "-100%"] }} // Panoramic effect
-        transition={{ repeat: Infinity, duration: 120, ease: "linear" }} // Linear panoramic view
+        transition={{ repeat: Infinity, duration: 60, ease: "easeInOut" }} // Linear panoramic view
         style={{
           width: "200%",
           height: "100%",
           backgroundImage: "url('./skateparks/loading.jpeg')",
-          backgroundSize: "fit",
+          backgroundSize: "cover",
           backgroundRepeat: "repeat-x",
           position: "absolute",
           top: 0,
@@ -217,7 +217,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
   }}
   transition={{
     duration: 1, // Duration of 1 second for the full pulse
-    repeat: Infinity, // Infinite loop
+    repeat: 20, // 20s Infinite loop
     repeatType: "loop", // Continuous looping
   }}
 >
@@ -254,7 +254,7 @@ const LoginScreen = ({ onLogin }: { onLogin: () => void }) => {
               }}
               transition={{
                 duration: 1, // Duration of 1 second for the full pulse
-                repeat: Infinity, // Infinite loop
+                repeat: 20, // Infinite loop
                 repeatType: "loop", // Continuous looping
               }}
               onClick={() => handlePurchaseVIPTicket()}
