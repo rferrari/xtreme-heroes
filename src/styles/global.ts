@@ -76,4 +76,24 @@ export default createGlobalStyle`${css`
     font-weight: 500;
     text-decoration: inherit;
   }
+
+
+#aioha-modal .text-lg {
+}
+
+@media only screen and (min-width: 768px) {
+  .tip_screen_message {
+    display:none;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .tip_screen_message {
+    display:block;
+    color:yellow;
+    z-index:100;
+    text-align: center;
+  }
+}
+
 `}`;

@@ -1,20 +1,20 @@
 import { ReactNode, createContext, useContext, useReducer } from "react";
 
-import { initAioha } from '@aioha/aioha'
+import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
 import '@aioha/react-ui/dist/build.css'
 
 const aioha = initAioha({
-  // hiveauth: {
-  //   name: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
-  //   description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
-  // },
-  // hivesigner: {
-  //   app: (import.meta.env.VITE_APPNAME || 'xtreme-heroes.skatehive'),
-  //   callbackURL: window.location.origin + '/',
-  //   scope: ['login', 'posting']
-  // }
-})
+  hiveauth: {
+    name: (import.meta.env.VITE_APPNAME || 'Xtreme-Heroes'),
+    description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
+  },
+});
+
+aioha.deregisterProvider(Providers.HiveSigner);
+aioha.deregisterProvider(Providers.PeakVault);
+aioha.deregisterProvider(Providers.Ledger);
+// aioha.deregisterProvider(Providers.Custom);
 
 interface Attributes {
   style: number;
