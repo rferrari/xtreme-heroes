@@ -251,13 +251,16 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
               </motion.button>
               </>
           ) : null}
-        </div>
-    
+
           <div className='tip_screen_message'>
             <p>Mobile Detected, </p>
             <p>Click on 🖥️ icon, </p>
             <p>and flip ↷ your phone!</p>
           </div>
+
+        </div>
+    
+
 
         {/* Footer Credits */}
         <div
@@ -270,8 +273,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
           }}
         >
           <p>
-            Designed by @vaipraonde | Game Engine: JohnPetros | Skatehive Devs:
-            @devferri @mengao @xvlad @alexandrefeliz @louzado @r4topunk
+            Designed by Skatehive Devs: @vaipraonde @devferri @mengao @xvlad @alexandrefeliz @louzado @r4topunk | Game Engine by: JohnPetros
           </p>
         </div>
     

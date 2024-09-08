@@ -89,10 +89,17 @@ export default createGlobalStyle`${css`
 
 @media only screen and (max-width: 768px) {
   .tip_screen_message {
+      margin-top:1em;
+      z-index:100;
+  } 
+
+  .tip_screen_message p {
+    font-family: Arial, sans-serif;
     display:block;
     color:yellow;
-    z-index:100;
+    font-weight: 600;
     text-align: center;
+    text-shadow: 0 0 black;
   }
 }
 
