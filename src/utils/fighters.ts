@@ -30,7 +30,7 @@ export const fighters = [
   { id: 4,  name: "vaipraonde", image: "vaipraonde.jpeg", attributes:           { style: 71, agility: 72, speed: 58 } },
   { id: 5,  name: "devferri", image: "devferri.jpeg", attributes:               { style: 59, agility: 48, speed: 82 } },
   { id: 6,  name: "r4topunk", image: "r4topunk.jpeg", attributes:               { style: 52, agility: 63, speed: 82 } },
-  { id: 7,  name: "skatedev", image: "skatedev.jpeg", attributes:               { style: 76, agility: 58, speed: 61 } },
+  { id: 7,  name: "fonestreet", image: "fonestreet.jpeg", attributes:               { style: 76, agility: 58, speed: 61 } },
   { id: 8,  name: "xeraifuma", image: "xeraifuma.jpeg", attributes:             { style: 53, agility: 41, speed: 61 } },
   { id: 9,  name: "ezekhiveadict", image: "ezekhiveadict.jpeg", attributes:     { style: 64, agility: 79, speed: 56 } },
   { id: 10, name: "louzado", image: "louzado.jpeg", attributes:                 { style: 54, agility: 64, speed: 60 } },

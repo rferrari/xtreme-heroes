@@ -70,12 +70,12 @@ export function Game({ setIsLoggedIn }: GameProps) {
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
 
-  // const [soundSettings, setSoundSettings] = useState(initialSoundSettings);
-  // const [volume, setVolume] = useState(soundSettings.volume);
-
-  const soundSettings = JSON.parse(localStorage.getItem('soundSettings')) || initialSoundSettings;
+  const [soundSettings, setSoundSettings] = useState(initialSoundSettings);
   const [volume, setVolume] = useState(soundSettings.volume);
-  const [soundSettingsState, setSoundSettings] = useState(soundSettings);
+
+  // const soundSettings = JSON.parse(localStorage.getItem('soundSettings')) || initialSoundSettings;
+  // const [volume, setVolume] = useState(soundSettings.volume);
+  // const [soundSettingsState, setSoundSettings] = useState(soundSettings);
 
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(event.target.value);
@@ -107,40 +107,47 @@ export function Game({ setIsLoggedIn }: GameProps) {
     setSoundSettings({ ...soundSettings });
   };
 
-  if (soundSettings['backgroundMusic'].sound === null) {
-    handleToogleSound('backgroundMusic');
-    soundSettings['backgroundMusic'].isMuted = false;
-  }
-  if (soundSettings['ollieFx'].sound === null) {
-    handleToogleSound('ollieFx');
-    soundSettings['ollieFx'].isMuted = false;
-  }
+  useEffect(() => {
+    if (soundSettings['backgroundMusic'].sound === null) {
+      handleToogleSound('backgroundMusic');
+    } else {
+       soundSettings['backgroundMusic'].isMuted = false;
+       soundSettings['backgroundMusic'].sound.mute(false);
+       soundSettings['backgroundMusic'].sound.loop(true);
+       soundSettings['backgroundMusic'].sound.play();
+    }
+    if (soundSettings['ollieFx'].sound === null) {
+      handleToogleSound('ollieFx');
+    }else {
+      soundSettings['ollieFx'].isMuted = false;
+      soundSettings['ollieFx'].sound.mute(false);
+    }
+  }, []);
 
   const stopSounds = () => {
     try {
       if (soundSettings['backgroundMusic'] && soundSettings['backgroundMusic'].sound) {
-        soundSettings['backgroundMusic'].sound.stop();
-        soundSettings['backgroundMusic'].sound.unload();
-        soundSettings['backgroundMusic'].sound = { sound: null, isMuted: false}; // Create new object
-        soundSettings['backgroundMusic'] = { sound: null, isMuted: false }; // Create new object
+        const isMuted = true;
+        soundSettings['backgroundMusic'].isMuted = isMuted;
+        soundSettings['backgroundMusic'].sound.mute(isMuted);
       }
       if (soundSettings['ollieFx'] && soundSettings['ollieFx'].sound) {
-        soundSettings['ollieFx'].sound.stop();
-        soundSettings['ollieFx'].sound = { sound: null, isMuted: false}; // Create new object
-        soundSettings['ollieFx'] = { sound: null, isMuted: false }; // Create new object
+        const isMuted = true
+        soundSettings['ollieFx'].isMuted = isMuted;
+        soundSettings['ollieFx'].sound.mute(isMuted);
       }
     } catch {
     }
   };
 
-  const setSoundSettingsState = (newSettings) => {
-    setSoundSettings(newSettings);
-    localStorage.setItem('soundSettings', JSON.stringify(newSettings));
-  };
+  // const setSoundSettingsState = (newSettings) => {
+  //   setSoundSettings(newSettings);
+  //   localStorage.setItem('soundSettings', JSON.stringify(newSettings));
+  // };
 
-  useEffect(() => {
-    localStorage.setItem('soundSettings', JSON.stringify(soundSettingsState));
-  }, [soundSettingsState]);
+  // useEffect(() => {
+  //   localStorage.setItem('soundSettings', JSON.stringify(soundSettingsState));
+  // }, [soundSettingsState]);
 
   // handleToogleSound('backgroundMusic');
   // handleToogleSound('soundFx');
@@ -633,7 +640,8 @@ ${myResultsPost}`;
             fontSize: "1em",
             fontFamily: "creepster",
             border: "0px solid yellow",
-            color: "white"
+            color: "white",
+            textShadow: "2px 2px 4px black",
           }}
           onClick={() => handleQuitGame()}
         >
@@ -648,10 +656,12 @@ ${myResultsPost}`;
           fontFamily: 'creepster',
           border: '0px solid yellow',
           color: 'white',
+          minWidth: '111px',
+          textShadow: "2px 2px 4px black",
         }}
         onClick={() => handleToogleSound('backgroundMusic')}
       >
-        {soundSettings['backgroundMusic'].isMuted ? 'Music On' : 'Music Off'}
+        {soundSettings['backgroundMusic'].isMuted ? 'Music Off' : 'Music On'}
       </button>
       <button
         style={{
@@ -660,10 +670,12 @@ ${myResultsPost}`;
           fontFamily: 'creepster',
           border: '0px solid yellow',
           color: 'white',
+          minWidth: '111px',
+          textShadow: "2px 2px 4px black",
         }}
         onClick={() => handleToogleSound('ollieFx')}
       >
-        {soundSettings['ollieFx'].isMuted ? 'Fx On' : 'Fx Off'}
+        {soundSettings['ollieFx'].isMuted ? 'Fx Off' : 'Fx On'}
       </button>
 
       <div style={{ position: 'relative', top: '0px' }}>
