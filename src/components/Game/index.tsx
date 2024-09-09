@@ -220,7 +220,23 @@ export function Game({ setIsLoggedIn }: GameProps) {
     // Generate markdown for each round
     let RoundX = roundDescriptions.length+1;
 
-/*    
+    const newRoundDescription_NoPicMode = 
+`|${RoundX}|${selectedAttribute?.toUpperCase()}|**${playerOne.selectedFighter?.name}** ${winner==="playerOne"?"🏆":"😡"}|${winner==="playerTwo"?"🏆":"😡"} **${playerTwo.selectedFighter?.name}**|\n`;
+
+// `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
+// |**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
+// ||||`;
+
+    setRoundDescriptions((prev) => [...prev, newRoundDescription_NoPicMode]);
+
+
+/* OLD USING BIG TABLE
+const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
+|**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
+||||`;
+*/    
+
+/*  OLD USING PROFILE PICTURE    
     const newRoundDescription_PictureMode = `
 ## Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***
 \n
@@ -230,12 +246,6 @@ export function Game({ setIsLoggedIn }: GameProps) {
 `;
     setRoundDescriptions((prev) => [...prev, newRoundDescription]);
 */
-
-const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
-|**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
-||||`;
-
-    setRoundDescriptions((prev) => [...prev, newRoundDescription_NoPicMode]);
   }
 
   const paragraphAnimation: Variants = {
@@ -467,6 +477,7 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     return (commentResponse.success === true);
   }
 
+  
   async function handlePostResultsSkateHive() {
     // Join all roundDescriptions into a single markdown string
     var myResultsPost = roundDescriptions.join('\n');
@@ -483,16 +494,28 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
       word_define = "super incredible";
     }
 
+    const sponsoredBy = "Skatehive";
+    const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG?format=match&mode=fit";
+    const coverImage = `![](${ipfsCoverImage})`;
+    const footer = `Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes!\n
+Play now at: <a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>!\n`;
+
+
     const myResultsPostTitle = 
 `## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
 
+    const tableHeader = `
+|#|Round|Skater 1|Skater 2|\n
+| --- | --- | --- | --- |\n`;
+
     myResultsPost = 
-`${myResultsPostTitle}\n
-In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **Skatehive**, we had an ${word_define} match! Here are the results:
+`${coverImage}\n
+${myResultsPostTitle}\n
+In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **${sponsoredBy}**, we had an ${word_define} match! Here are the results:
 \n
-||||
-|-|-|-|
-${myResultsPost}`;
+${tableHeader}
+${myResultsPost}
+${footer}`;
 
     // Log the markdown for debugging
     //console.log(myResultsPostTitle);
@@ -501,13 +524,14 @@ ${myResultsPost}`;
     shareResultsHive("", myResultsPost)
     .then((results)=> {
       console.log(results);
-      // if(results===false)
-        //return; //fail... stop or continue?
+      if(results===false)
+        return; //fail... stop or continue?
     })
 
     // Handle the end game button click
     handleEndGameButtonClick();
   }
+
 
   function defineNextGameInterval(timeoutType: NextGameInterval){
     // Determine the recovery time based on win/loss
