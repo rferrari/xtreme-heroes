@@ -90,7 +90,7 @@ export function Game({ setIsLoggedIn }: GameProps) {
         soundSettings[type].sound.mute(isMuted);
      } else {
       if (type === 'backgroundMusic') {
-        const backgroundMusic = new Howl({ src: ['/soundfx/background.mp3'] });
+        const backgroundMusic = new Howl({ src: ['/soundfx/skatepark.mp3'] });
         soundSettings[type].sound = backgroundMusic;
         backgroundMusic.once('load', () => {
           soundSettings[type].sound.loop(true);
@@ -139,41 +139,6 @@ export function Game({ setIsLoggedIn }: GameProps) {
     } catch {
     }
   };
-
-  // const setSoundSettingsState = (newSettings) => {
-  //   setSoundSettings(newSettings);
-  //   localStorage.setItem('soundSettings', JSON.stringify(newSettings));
-  // };
-
-  // useEffect(() => {
-  //   localStorage.setItem('soundSettings', JSON.stringify(soundSettingsState));
-  // }, [soundSettingsState]);
-
-  // handleToogleSound('backgroundMusic');
-  // handleToogleSound('soundFx');
-
-  //   Howler.volume(0.0);
-  //   var sfxBackgrooundMusic = new Howl({src: [
-  //     '/soundfx/background.mp3', 
-  //   ]});
-
-  //   var sfxOllie = new Howl({src: [
-  //     '/soundfx/ollie.mp3', 
-  //   ]});
-    //  Howler.volume(0.9);
-
-  // // Clear listener after first call.
-  //   sfxBackgrooundMusic.once('load', function(){
-  //     sfxBackgrooundMusic.loop(true);
-  //     sfxBackgrooundMusic.play();
-  //     // Howler.volume(0.8);
-  //   });
-  
-  //   // Fires when the sound finishes playing.
-  //   sfxBackgrooundMusic.on('end', function() {
-  //     console.log('looping background music');
-  //     //sfxBackgrooundMusic.play();
-  //   });
 
   // Function to change the background image
   const changeBackground = () => {
