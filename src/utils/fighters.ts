@@ -24,7 +24,7 @@ export const fighters = [
 */
 
 export const fighters = [
-  { id: 1,  name: "POWER", image: "xvlad.jpeg", attributes:                     { style: 168, agility: 161, speed: 155 } },
+  // { id: 1,  name: "POWER", image: "xvlad.jpeg", attributes:                     { style: 168, agility: 161, speed: 155 } },
   { id: 1,  name: "xvlad", image: "xvlad.jpeg", attributes:                     { style: 68, agility: 61, speed: 55 } },
   { id: 2,  name: "alexandrefeliz", image: "alexandrefeliz.jpeg", attributes:   { style: 73, agility: 65, speed: 62 } },
   { id: 3,  name: "mengao", image: "mengao.jpeg", attributes:                   { style: 62, agility: 59, speed: 60 } },
