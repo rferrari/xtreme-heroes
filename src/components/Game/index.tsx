@@ -24,8 +24,19 @@ import { useAioha } from '@aioha/react-ui';
 
 
 import { Howl, Howler } from 'howler';
+Howler.volume(0.7);
 
-Howler.volume(0.0);
+const initialSoundSettings = {
+  volume: 0.7,
+  backgroundMusic: {
+    sound: null as any,
+    isMuted: true,
+  },
+  ollieFx: {
+    sound: null as any,
+    isMuted: true,
+  },
+};
 
 type NextGameInterval =
   | "jail"
@@ -59,28 +70,103 @@ export function Game({ setIsLoggedIn }: GameProps) {
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
 
-    Howler.volume(0.0);
-    var sfxBackgrooundMusic = new Howl({src: [
-      '/soundfx/background.mp3', 
-    ]});
+  // const [soundSettings, setSoundSettings] = useState(initialSoundSettings);
+  // const [volume, setVolume] = useState(soundSettings.volume);
 
-    var sfxOllie = new Howl({src: [
-      '/soundfx/ollie.mp3', 
-    ]});
-    Howler.volume(0.9);
+  const soundSettings = JSON.parse(localStorage.getItem('soundSettings')) || initialSoundSettings;
+  const [volume, setVolume] = useState(soundSettings.volume);
+  const [soundSettingsState, setSoundSettings] = useState(soundSettings);
 
-  // Clear listener after first call.
-    sfxBackgrooundMusic.once('load', function(){
-      sfxBackgrooundMusic.loop(true);
-      sfxBackgrooundMusic.play();
-      // Howler.volume(0.8);
-    });
+  const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(event.target.value);
+    setVolume(newVolume);
+    Howler.volume(newVolume);
+  };
+
+  const handleToogleSound = (type: 'backgroundMusic' | 'ollieFx') => {
+     if (soundSettings[type].sound) {
+        const isMuted = !soundSettings[type].isMuted;
+        soundSettings[type].isMuted = isMuted;
+        soundSettings[type].sound.mute(isMuted);
+     } else {
+      if (type === 'backgroundMusic') {
+        const backgroundMusic = new Howl({ src: ['/soundfx/background.mp3'] });
+        soundSettings[type].sound = backgroundMusic;
+        backgroundMusic.once('load', () => {
+          soundSettings[type].sound.loop(true);
+          soundSettings[type].sound.play();
+        });
+        backgroundMusic.on('end', () => {
+          // console.log('looping background music');
+        });
+      } else if (type === 'ollieFx') {
+        const sfxOllie = new Howl({ src: ['/soundfx/ollie.mp3'] });
+        soundSettings[type].sound = sfxOllie;
+      }
+    }
+    setSoundSettings({ ...soundSettings });
+  };
+
+  if (soundSettings['backgroundMusic'].sound === null) {
+    handleToogleSound('backgroundMusic');
+    soundSettings['backgroundMusic'].isMuted = false;
+  }
+  if (soundSettings['ollieFx'].sound === null) {
+    handleToogleSound('ollieFx');
+    soundSettings['ollieFx'].isMuted = false;
+  }
+
+  const stopSounds = () => {
+    try {
+      if (soundSettings['backgroundMusic'] && soundSettings['backgroundMusic'].sound) {
+        soundSettings['backgroundMusic'].sound.stop();
+        soundSettings['backgroundMusic'].sound.unload();
+        soundSettings['backgroundMusic'].sound = { sound: null, isMuted: false}; // Create new object
+        soundSettings['backgroundMusic'] = { sound: null, isMuted: false }; // Create new object
+      }
+      if (soundSettings['ollieFx'] && soundSettings['ollieFx'].sound) {
+        soundSettings['ollieFx'].sound.stop();
+        soundSettings['ollieFx'].sound = { sound: null, isMuted: false}; // Create new object
+        soundSettings['ollieFx'] = { sound: null, isMuted: false }; // Create new object
+      }
+    } catch {
+    }
+  };
+
+  const setSoundSettingsState = (newSettings) => {
+    setSoundSettings(newSettings);
+    localStorage.setItem('soundSettings', JSON.stringify(newSettings));
+  };
+
+  useEffect(() => {
+    localStorage.setItem('soundSettings', JSON.stringify(soundSettingsState));
+  }, [soundSettingsState]);
+
+  // handleToogleSound('backgroundMusic');
+  // handleToogleSound('soundFx');
+
+  //   Howler.volume(0.0);
+  //   var sfxBackgrooundMusic = new Howl({src: [
+  //     '/soundfx/background.mp3', 
+  //   ]});
+
+  //   var sfxOllie = new Howl({src: [
+  //     '/soundfx/ollie.mp3', 
+  //   ]});
+    //  Howler.volume(0.9);
+
+  // // Clear listener after first call.
+  //   sfxBackgrooundMusic.once('load', function(){
+  //     sfxBackgrooundMusic.loop(true);
+  //     sfxBackgrooundMusic.play();
+  //     // Howler.volume(0.8);
+  //   });
   
-    // Fires when the sound finishes playing.
-    sfxBackgrooundMusic.on('end', function(){
-      console.log('looping background music');
-      //sfxBackgrooundMusic.play();
-    });
+  //   // Fires when the sound finishes playing.
+  //   sfxBackgrooundMusic.on('end', function() {
+  //     console.log('looping background music');
+  //     //sfxBackgrooundMusic.play();
+  //   });
 
   // Function to change the background image
   const changeBackground = () => {
@@ -242,7 +328,9 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
       return;
     }
 
-    sfxOllie.play();
+    // sfxOllie.play();
+    soundSettings['ollieFx'].sound.play();
+
     dispatch({ type: "setStage", payload: "fighterTwo-selection" });
 
     try {
@@ -529,6 +617,7 @@ ${myResultsPost}`;
     const confirmation = window.confirm("You will lose the game. Are you sure you want to leave?");
   
     if (confirmation) {
+      stopSounds();
       handleEndGameButtonClick();
       setIsLoggedIn(false); // Go back to login if the user confirms
     }
@@ -537,7 +626,7 @@ ${myResultsPost}`;
   return (
     <Container>
 
-      <div style={{position:'absolute', zIndex: "101",}}>
+  <div style={{position:'absolute', zIndex: "101",}}>
         <button
           style={{
             padding: "1rem 2rem",
@@ -551,7 +640,51 @@ ${myResultsPost}`;
          I Quit!
           {/* {user ?? "Connect Wallet"} */}
         </button>
+
+        <button
+        style={{
+          padding: '1rem 2rem',
+          fontSize: '1em',
+          fontFamily: 'creepster',
+          border: '0px solid yellow',
+          color: 'white',
+        }}
+        onClick={() => handleToogleSound('backgroundMusic')}
+      >
+        {soundSettings['backgroundMusic'].isMuted ? 'Music On' : 'Music Off'}
+      </button>
+      <button
+        style={{
+          padding: '1rem 2rem',
+          fontSize: '1em',
+          fontFamily: 'creepster',
+          border: '0px solid yellow',
+          color: 'white',
+        }}
+        onClick={() => handleToogleSound('ollieFx')}
+      >
+        {soundSettings['ollieFx'].isMuted ? 'Fx On' : 'Fx Off'}
+      </button>
+
+      <div style={{ position: 'relative', top: '0px' }}>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={volume}
+          onChange={handleVolumeChange}
+          className="slider"
+          style={{
+            width: '100%',
+            height: '20px',
+            background: 'rgba(0,0,0,.5)',
+            appearance: 'none',
+          }}
+        />
       </div>
+
+  </div>
 
       <Player
         selectedFighter={playerOne.selectedFighter}

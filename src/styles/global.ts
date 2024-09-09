@@ -103,4 +103,40 @@ export default createGlobalStyle`${css`
   }
 }
 
+// Add styles to your file:
+.slider {
+  -webkit-appearance: slider;
+  width: 100%;
+  height: 20px;
+  background: rgba(0,0,0,.5);
+  border-radius: 10px;
+  outline: none;
+  opacity: 0.7;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
+.slider::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+}
+
 `}`;
