@@ -186,7 +186,7 @@ export function Game({ setIsLoggedIn }: GameProps) {
     let RoundX = roundDescriptions.length+1;
 
     const newRoundDescription_NoPicMode = 
-`|${RoundX}|${selectedAttribute?.toUpperCase()}|**${playerOne.selectedFighter?.name}** ${winner==="playerOne"?"🏆":"😡"}|${winner==="playerTwo"?"🏆":"😡"} **${playerTwo.selectedFighter?.name}**|\n`;
+`|${RoundX}|${selectedAttribute?.toUpperCase()}|${winner==="playerOne"?"🏆":"😡"} **${playerOne.selectedFighter?.name}**|${winner==="playerTwo"?"🏆":"😡"} **${playerTwo.selectedFighter?.name}**|`;
 
 // `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
 // |**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
@@ -442,59 +442,82 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     return (commentResponse.success === true);
   }
 
-  
+  function selectSponsorForPost() {
+    const sponsoredBy = import.meta.env.VITE_SPONSORED_BY?.split(',');
+    if (sponsoredBy) {
+      return sponsoredBy[Math.floor(Math.random() * sponsoredBy.length)];
+    } else {
+      return "Skatehive";
+    }
+  }
+
+  function selectWordDefineForPost(finalRounds:number){
+    if (finalRounds <= 10) {
+      return "super easy";
+    } else if (finalRounds <= 13) {
+      return "easy";
+    } else if (finalRounds <= 15) {
+      return "relatively easy";
+    } else if (finalRounds <= 17) {
+      return "hard-fought";
+    } else if (finalRounds <= 19) {
+      return "difficult but manageable";
+    } else if (finalRounds <= 21) {
+      return "challenging";
+    } else if (finalRounds <= 23) {
+      return "very challenging";
+    } else if (finalRounds <= 25) {
+      return "extremely challenging";
+    } else {
+      return "supremely challenging";
+    }
+}
+
   async function handlePostResultsSkateHive() {
     // Join all roundDescriptions into a single markdown string
     var myResultsPost = roundDescriptions.join('\n');
     let finalRounds = roundDescriptions.length-1;
 
-    var word_define = "";
-    if (finalRounds <= 13) {
-      word_define = "easy";
-    } else if (finalRounds > 13 && finalRounds <= 17) {
-      word_define = "hard-fought";
-    } else if (finalRounds > 17 && finalRounds <= 22) {
-      word_define = "challenging";
-    } else {
-      word_define = "super incredible";
-    }
+    const wordDefine = selectWordDefineForPost(finalRounds);
+    const selectedSponsor = selectSponsorForPost();
+    
+    const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG";
+    const ipfsCoverSize = import.meta.env.VITE_COVER_IMAGE_SIZE || "?width=150&height=150format=match&mode=fit";
+    const coverImage = `![](${ipfsCoverImage}${ipfsCoverSize})`;
 
-    const sponsoredBy = "Skatehive";
-    const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG?format=match&mode=fit";
-    const coverImage = `![](${ipfsCoverImage})`;
-    const footer = `Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes!\n
-Play now at: <a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>!\n`;
-
+    const footer = `<center>Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes!
+Play Now: <a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a></center>`;
 
     const myResultsPostTitle = 
 `## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
 
     const tableHeader = `
-|#|Round|Skater 1|Skater 2|\n
-| --- | --- | --- | --- |\n`;
+|#|Round|Skater 1|Skater 2|
+| --- | --- | --- | --- |`;
 
     myResultsPost = 
-`${coverImage}\n
-${myResultsPostTitle}\n
-In another **${import.meta.env.VITE_APPNAME}** competition sponsored by **${sponsoredBy}**, we had an ${word_define} match! Here are the results:
-\n
+`${coverImage}
+
+${myResultsPostTitle}
+
+In another **${import.meta.env.VITE_APPNAME}** competition sponsored by ***${selectedSponsor}***, we had an ${wordDefine} match! Here are the results:
+
 ${tableHeader}
 ${myResultsPost}
-${footer}`;
+
+${footer}
+`;
 
     // Log the markdown for debugging
     //console.log(myResultsPostTitle);
     console.log(myResultsPost);
 
-    shareResultsHive("", myResultsPost)
-    .then((results)=> {
+    shareResultsHive("", myResultsPost).then((results)=> {
       console.log(results);
-      if(results===false)
-        return; //fail... stop or continue?
+      if(results===false) return; //if user cancel posting, continue to modal ??? fail... stop or continue?
+      // if sucess posting, Handle the end game button click  or wait to press continue
+      handleEndGameButtonClick();
     })
-
-    // Handle the end game button click
-    handleEndGameButtonClick();
   }
 
 
