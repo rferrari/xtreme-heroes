@@ -273,7 +273,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
         <AiohaModal
           displayed={modalDisplayed}
           loginOptions={{
-            msg: "Login",
+            msg: "Login "+import.meta.env.VITE_APPNAME || "Xtreme-Heroes",
             keyType: KeyTypes.Posting,
           }}
           // onLogin={console.log}
