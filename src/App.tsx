@@ -34,8 +34,8 @@ const LoginScreen = lazy(() =>
 import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
 import '@aioha/react-ui/dist/build.css'
-import { AiohaModal } from '@aioha/react-ui'
-import { KeyTypes } from '@aioha/aioha'
+// import { AiohaModal } from '@aioha/react-ui'
+// import { KeyTypes } from '@aioha/aioha'
 
 const aioha = initAioha({
   hiveauth: {
@@ -56,7 +56,7 @@ aioha.deregisterProvider(Providers.Ledger);
 export function App() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [modalDisplayed, setModalDisplayed] = useState(false)
+  // const [modalDisplayed, setModalDisplayed] = useState(false)
 
   // Simulate loading screen for 2 seconds
   useEffect(() => {

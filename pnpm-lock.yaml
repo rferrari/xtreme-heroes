@@ -39,6 +39,12 @@ importers:
         specifier: ^6.0.1
         version: 6.1.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@engrave/ledger-app-hive':
+        specifier: ^3.5.6
+        version: 3.5.6
+      '@ledgerhq/hw-transport-webusb':
+        specifier: ^6.29.2
+        version: 6.29.2
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
@@ -63,6 +69,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.0.0
         version: 4.3.1(vite@4.5.3(@types/node@18.19.50))
+      crypto-js:
+        specifier: ^4.2.0
+        version: 4.2.0
       eslint:
         specifier: ^8.38.0
         version: 8.57.0
@@ -72,6 +81,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.3.4
         version: 0.3.5(eslint@8.57.0)
+      hive-tx:
+        specifier: ^5.4.4
+        version: 5.4.4
       typescript:
         specifier: ^5.0.2
         version: 5.5.4
@@ -1045,6 +1057,7 @@ packages:
   follow-redirects@1.15.8:
     resolution: {integrity: sha512-xgrmBhBToVKay1q2Tao5LI26B83UhrB/vM1avwVSDzt8rx3rO6AizBAaF46EgksTVr+rFTQaqZZ9MVBfUe4nig==}
     engines: {node: '>=4.0'}
+    deprecated: Browser detection issues fixed in v1.15.9
     peerDependencies:
       debug: '*'
     peerDependenciesMeta:
@@ -2171,7 +2184,7 @@ snapshots:
   '@ledgerhq/hw-transport@6.28.8':
     dependencies:
       '@ledgerhq/devices': 8.4.2
-      '@ledgerhq/errors': 6.14.0
+      '@ledgerhq/errors': 6.18.0
       events: 3.3.0
 
   '@ledgerhq/hw-transport@6.31.2':
