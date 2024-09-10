@@ -45,5 +45,4 @@ export const fighters = [
   { id: 18, name: "diegodigocuts", image: "diegodigocuts.jpeg", attributes:     { style: 64, agility: 65, speed: 61 } },
   { id: 19, name: "web-gnar", image: "web-gnar.jpeg", attributes:               { style: 72, agility: 66, speed: 70 } },
   { id: 20, name: "willdias", image: "willdias.jpeg", attributes:               { style: 62, agility: 59, speed: 61 } },
-
 ];

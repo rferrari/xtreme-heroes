@@ -383,6 +383,10 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     changeTurn();
   }
 
+  function capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   function handleNextRoundButtonClick() {
     changeBackground();
     setIsRoundResultModalVisible(false);
@@ -397,14 +401,15 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     if ((playerOne.fighters.length === 19) && (playerOne.isWinner)) {
       dispatch({ type: "setWinner", payload: "playerOne" });
       dispatch({ type: "setIsEndGame", payload: true });
-      const newRoundDescription = "## Congratulations! You Win!";
+      const newRoundDescription = `
+You Win! Congratulations **${capitalize(String(user))}** on your well-deserved victory!`;
       defineNextGameInterval('rest');
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
     } else if ((playerTwo.fighters.length === 19) && (playerTwo.isWinner)) {
       dispatch({ type: "setWinner", payload: "playerTwo" });
       dispatch({ type: "setIsEndGame", payload: true });
-      const newRoundDescription = "## You Loose!";
+      const newRoundDescription = "## You Loose! Try harder next time!";
       defineNextGameInterval('jail');
       setRoundDescriptions((prev) => [...prev, newRoundDescription]);
       return;
@@ -444,11 +449,11 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
 
   function selectSponsorForPost() {
     const sponsoredBy = import.meta.env.VITE_SPONSORED_BY?.split(',');
+    var selectedSponsor = "Skatehive";
     if (sponsoredBy) {
-      return sponsoredBy[Math.floor(Math.random() * sponsoredBy.length)];
-    } else {
-      return "Skatehive";
+      selectedSponsor = sponsoredBy[Math.floor(Math.random() * sponsoredBy.length)];
     }
+    return `<a target='_blank' href='https://www.skatehive.app/skater/${selectedSponsor}'>${selectedSponsor}</a>`;
   }
 
   function selectWordDefineForPost(finalRounds:number){
@@ -469,38 +474,44 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     } else if (finalRounds <= 25) {
       return "extremely challenging";
     } else {
-      return "supremely challenging";
+      return "electrifying";
     }
 }
 
-  async function handlePostResultsSkateHive() {
-    // Join all roundDescriptions into a single markdown string
-    var myResultsPost = roundDescriptions.join('\n');
-    let finalRounds = roundDescriptions.length-1;
 
-    const wordDefine = selectWordDefineForPost(finalRounds);
-    const selectedSponsor = selectSponsorForPost();
-    
-    const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG";
-    const ipfsCoverSize = import.meta.env.VITE_COVER_IMAGE_SIZE || "?width=150&height=150format=match&mode=fit";
-    const coverImage = `![](${ipfsCoverImage}${ipfsCoverSize})`;
+/* eslint-disable no-console */
+function generatePostMarkdown(){
+  // Join all roundDescriptions into a single markdown string
+  var myResultsPost = roundDescriptions.join('\n');
+  let finalRounds = roundDescriptions.length-1;
+  
+  const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS 
+                          || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG";
+  const ipfsCoverSize = import.meta.env.VITE_COVER_IMAGE_SIZE 
+                          || "?width=150&height=150format=match&mode=fit";
+  const coverImage = `![](${ipfsCoverImage}${ipfsCoverSize})`;
 
-    const footer = `<center>Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes!
-Play Now: <a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a></center>`;
-
-    const myResultsPostTitle = 
+  const wordDefine = selectWordDefineForPost(finalRounds);
+  const selectedSponsor = selectSponsorForPost();
+  const postIntro = 
+`In another ${import.meta.env.VITE_APPNAME} competition sponsored by **${selectedSponsor}**, we had an ${wordDefine} match that came down to the wire! Check out the results below:`;
+  
+  const myResultsPostTitle = 
 `## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
-
-    const tableHeader = `
-|#|Round|Skater 1|Skater 2|
+  
+  const tableHeader = 
+`|#|Round|Skater 1|Skater 2|
 | --- | --- | --- | --- |`;
-
-    myResultsPost = 
+  
+  const footer = `<center>Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes! Play Now: 
+**<a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>**</center>`;
+  
+  myResultsPost = 
 `${coverImage}
 
 ${myResultsPostTitle}
 
-In another **${import.meta.env.VITE_APPNAME}** competition sponsored by ***${selectedSponsor}***, we had an ${wordDefine} match! Here are the results:
+${postIntro}
 
 ${tableHeader}
 ${myResultsPost}
@@ -508,16 +519,24 @@ ${myResultsPost}
 ${footer}
 `;
 
-    // Log the markdown for debugging
-    //console.log(myResultsPostTitle);
-    console.log(myResultsPost);
+  // Log the markdown for debugging
+  console.log(myResultsPost);
+  return myResultsPost;
+}
+/* eslint-enable no-console */
 
-    shareResultsHive("", myResultsPost).then((results)=> {
-      console.log(results);
-      if(results===false) return; //if user cancel posting, continue to modal ??? fail... stop or continue?
-      // if sucess posting, Handle the end game button click  or wait to press continue
-      handleEndGameButtonClick();
-    })
+
+  async function handlePostResultsSkateHive() {
+    try {
+      const myResultsPost = generatePostMarkdown();
+      shareResultsHive("", myResultsPost).then((results)=> {
+        // console.log(results);
+        if(results===false) return; // if user cancel posting, continue to modal ??? fail... stop or continue?
+        handleEndGameButtonClick(); // sucess posting, Handle the end game button click  or wait to press continue
+      })
+    } catch (err) {
+      console.log("check if keychain is enabled");
+    }
   }
 
 
@@ -531,7 +550,7 @@ ${footer}
     localStorage.setItem('recoveryAt', recoveryAt.toISOString());
     localStorage.setItem('recoveryType', timeoutType);
 
-    const recoveryMsg = timeoutType === "rest" ? restMessage : jailMessage; // 10 minutes for win, 45 for loss    
+    const recoveryMsg = timeoutType === "rest" ? restMessage : jailMessage; // 10 minutes for win, 45 for loss
     setRecoveryMessage(recoveryMsg);
 
     setIsRecovered(false);  // Start the cooldown period

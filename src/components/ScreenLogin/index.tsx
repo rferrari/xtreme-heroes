@@ -36,7 +36,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
             else {
               console.log('Xtreme-Heroes Skate Pass Not Found to '+ user);
             }
-            setTimeout(() => setIsLoading(false), 2000);
+            setTimeout(() => setIsLoading(false), 1500);
           });
       } catch (error) {
         console.error('Error fetching VIP list:', error);
