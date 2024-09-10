@@ -514,8 +514,8 @@ function generatePostMarkdown(){
 `|#|Round|Skater 1|Skater 2|
 | --- | --- | --- | --- |`;
   
-  const footer = `<center>Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes! Play Now: 
-**<a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>**</center>`;
+  const footer = `<center>*Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes! Play Now:*
+***<a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>***</center>`;
   
   myResultsPost = 
 `${coverImage}
