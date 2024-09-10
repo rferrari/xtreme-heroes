@@ -83,16 +83,6 @@ export function App() {
             // <Game /> //old game with no propos
             <Game setIsLoggedIn={setIsLoggedIn} />
           )}
-
-          <AiohaModal
-            displayed={modalDisplayed}
-            loginOptions={{
-              msg: 'Login',
-              keyType: KeyTypes.Posting
-            }}
-            onLogin={console.log}
-            onClose={setModalDisplayed}
-          />
         </GameProvider>
       </AiohaProvider>
     </ThemeProvider>
