@@ -72,7 +72,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
   useEffect(() => {
     if (user) {
       if (isVIP) setIsLoading(false)
-      else       fetchVIPList();
+      else fetchVIPList();
     }
   }, [user]);
 
@@ -269,15 +269,17 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       </div>
 
       {/* Modal for login */}
-      <AiohaModal
-        displayed={modalDisplayed}
-        loginOptions={{
-          msg: "Login",
-          keyType: KeyTypes.Posting,
-        }}
-        // onLogin={console.log}
-        onClose={setModalDisplayed}
-      />
+      <div className={'dark'}>
+        <AiohaModal
+          displayed={modalDisplayed}
+          loginOptions={{
+            msg: "Login",
+            keyType: KeyTypes.Posting,
+          }}
+          // onLogin={console.log}
+          onClose={setModalDisplayed}
+        />
+      </div>
     </div>
   );
 
