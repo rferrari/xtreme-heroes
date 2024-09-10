@@ -19,7 +19,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
 
   // Function to fetch the updated VIP list
   let fetchCount = 0;
-  async function fetchVIPList() {
+  async function getVIPList() {
     if (!user) return;
     if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
 
@@ -58,7 +58,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
         console.log(`Wait, validating ${user} Skate Pass`);
         setIsLoading(true);
         setTimeout(() => {
-          fetchVIPList();  // Reload the updated VIP list after successfully adding the user
+          getVIPList();  // Reload the updated VIP list after successfully adding the user
         }, 5000);          // wait to start search after 5 seconds. Hive blockchain 3s block transactions
       } else {
         console.log('Skate pass purchase failed: ' + user);
@@ -72,7 +72,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
   useEffect(() => {
     if (user) {
       if (isVIP) setIsLoading(false)
-      else fetchVIPList();
+      else getVIPList();
     }
   }, [user]);
 
