@@ -1,18 +1,25 @@
 import { useState, useEffect, lazy } from "react";
 import { ThemeProvider } from "styled-components";
-import GlobalStyles from "./styles/global";
-import theme from "./styles/theme";
 import { Game } from "./components/Game";
+
 const GameProvider = lazy(() =>     // import { GameProvider } from "./hooks/useGame";
 import("./hooks/useGame").then((module) => ({ default: module.GameProvider })));
+
 const LoadingScreen = lazy(() =>    //import LoadingScreen from "./components/ScreenLoading";
 import("./components/ScreenLoading").then((module) => ({ default: module.LoadingScreen })));
+
 const LoginScreen = lazy(() =>    //import LoginScreen from "./components/ScreenLogin";
 import("./components/ScreenLogin").then((module) => ({ default: module.LoginScreen })));
+
+const SpeedInsights = lazy(() =>    //import LoginScreen from "./components/ScreenLogin";
+import("@vercel/speed-insights/next").then((module) => ({ default: module.SpeedInsights })));
 
 import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
 import '@aioha/react-ui/dist/build.css'
+
+import GlobalStyles from "./styles/global";
+import theme from "./styles/theme";
 
 const aioha = initAioha({
   hiveauth: {
@@ -53,6 +60,7 @@ export function App() {
             <Game setIsLoggedIn={setIsLoggedIn} />
           )}
         </GameProvider>
+        <SpeedInsights />
       </AiohaProvider>
     </ThemeProvider>
   );

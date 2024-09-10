@@ -14,6 +14,7 @@
     "@aioha/aioha": "^1.5.4",
     "@aioha/react-ui": "^1.4.3",
     "@lottiefiles/react-lottie-player": "^3.5.3",
+    "@vercel/speed-insights": "^1.0.12",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "framer-motion": "^10.12.18",
