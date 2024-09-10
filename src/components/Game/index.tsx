@@ -450,10 +450,21 @@ You Win! Congratulations **${capitalize(String(user))}** on your well-deserved v
   function selectSponsorForPost() {
     const sponsoredBy = import.meta.env.VITE_SPONSORED_BY?.split(',');
     var selectedSponsor = "Skatehive";
+    var link = "";
     if (sponsoredBy) {
       selectedSponsor = sponsoredBy[Math.floor(Math.random() * sponsoredBy.length)];
+      if (selectedSponsor == "Skatehive"){
+        //if skate hive send to main app page
+        link = `<a target='_blank' href='https://www.skatehive.app/'>${selectedSponsor}</a>`;        
+      } else {
+        //if has hive user, send to profile page
+        link = `<a target='_blank' href='https://www.skatehive.app/skater/${selectedSponsor.toLowerCase()}'>${selectedSponsor}</a>`;
+      }
+    } else {
+      //if cant find env var, send to main skatehive page
+      link = `<a target='_blank' href='https://www.skatehive.app/'>${selectedSponsor}</a>`;
     }
-    return `<a target='_blank' href='https://www.skatehive.app/skater/${selectedSponsor}'>${selectedSponsor}</a>`;
+    return link;
   }
 
   function selectWordDefineForPost(finalRounds:number){
