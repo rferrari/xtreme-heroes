@@ -30,11 +30,11 @@ const initialSoundSettings = {
   volume: 0.7,
   backgroundMusic: {
     sound: null as any,
-    isMuted: true,
+    isMuted: false,
   },
   ollieFx: {
     sound: null as any,
-    isMuted: true,
+    isMuted: false,
   },
 };
 
