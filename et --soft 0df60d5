@@ -1,0 +1,90 @@
+[33m0df60d5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrc1[m[33m, [m[1;31mxtreme-heroes/rc1[m[33m)[m add Vercel Analytics
+[33mca3bc79[m supersk8
+[33mfb7f592[m change fetchvip to getvip
+[33m642bb93[m remove unecessary div from loading screen
+[33m5db2a41[m aioha message login to app name
+[33mb047220[m make aioha modal dark mode
+[33m2f8e2c4[m make fast loading for vip users
+[33m175c6cf[m enabled aioha vite chunk
+[33m1c7d344[m code cleaning
+[33m3a0d94e[m move aioha from useGame to app.tsx
+[33ma0b50b9[m markdown updates
+[33mb3bc5d8[m url link to lowercase to match skatehive specs
+[33ma71061c[m[33m ([m[1;31mxtreme-heroes/save-soundsettings[m[33m, [m[1;32msave-soundsettings[m[33m, [m[1;32mmain[m[33m)[m sync soundFx label with initial settings
+[33m3570644[m markdown improvements, searching time reduced to 1500
+[33mdb830d5[m do we have a RC2
+[33mbf3947b[m removed super power skater
+[33mc9e9efc[m markdown improvements
+[33mea3da8f[m change background mp3 to skatepark
+[33m944e516[m decrease table size height for posting on hive
+[33m51d410f[m add IPFS Cover Image
+[33m85de4a0[m[33m ([m[1;31mxtreme-heroes/soundfx[m[33m)[m enter soundfx on
+[33m785add8[m volume settings and stop sounds when quit
+[33m7a0eff4[m play ollie SFx
+[33mda6e811[m playing sound
+[33m141393f[m import uifx lib
+[33mfc9cd04[m improve mobile flip alert
+[33mc349dfa[m split code loading login, add mobile warn
+[33mf924dc8[m improve quality and otimized loading jpeg
+[33mf541a52[m something with type vip_price
+[33m3070b21[m optimize background animation
+[33mc33a3b3[m it was too fast. add 2s timeout to searching ticket
+[33m0158ce3[m use isloading to display searching... message
+[33mfd37948[m show message found your ticket and fix final round counter to post
+[33mb0040e4[m now we check the user transaction history and see if has a vip ticket purchase transaction
+[33m054cdbf[m fix xlety name.
+[33m4dde943[m fix xlety name
+[33m4d36a38[m fix -min file names
+[33m6b1d27c[m optimize images file size to 50% average smaller
+[33m72740b7[m add some motion purchase tickets
+[33m8c3c365[m testing vercel resources
+[33m9d01f5f[m more readme updates
+[33m5b6db76[m readme updates
+[33m09d94c1[m readme updates
+[33md87a123[m readme update
+[33m9e74b66[m RC1
+[33m08d5a2f[m RC1
+[33mdf1066e[m items store preview and countdown
+[33m3e1bcb0[m[33m ([m[1;32mskate-hive-game[m[33m)[m new features skatehive
+[33me15c2c0[m skatehive mods
+[33me99409c[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update README.md
+[33me76924b[m Update README.md
+[33mbfbaa72[m Merge pull request #7 from JohnPetros/Fork
+[33m4b3bf5f[m[33m ([m[1;31morigin/Fork[m[33m)[m Merge branch 'main' of https://github.com/JohnPetros/tekken-top-trumps-game into Fork
+[33m7d60739[m 🔥 fire: Remove Scoreboard component
+[33ma935743[m Merge pull request #6 from JohnPetros/Fork
+[33m501491f[m 🎴 Add favicon
+[33mc6dfb8f[m Merge pull request #5 from JohnPetros/Fork
+[33m10e9309[m 📝 docs: Increase img preview size
+[33ma101aaa[m Merge pull request #4 from JohnPetros/Fork
+[33m706c0d6[m Merge branch 'main' of https://github.com/JohnPetros/tekken-top-trumps-game into Fork
+[33m3262094[m 📝 docs: Add readmen content
+[33mb05dd94[m Merge pull request #3 from JohnPetros/Fork
+[33ma6b1b5d[m 💫 animatation: Enter and exit Fighter Card
+[33m177203c[m 🐛 fix: Exchange fighters in draw case
+[33m6cb4758[m 🐛 fix: Fighter card saturation
+[33ma18f35b[m Merge pull request #2 from JohnPetros/Fork
+[33m25658f1[m ✨ feat: Add end game modal
+[33m82655e7[m Merge pull request #1 from JohnPetros/Fork
+[33m7db3d65[m 🌟 Alter game structure
+[33m8469619[m ✨ feat: Show fail result modal
+[33m1a46bec[m ✨ feat: Disable used Fighters
+[33m76f507a[m ✨ feat: Player score incrementig
+[33mdf1d0ee[m ✨ feat: Randomly set player two fighter
+[33m5db9435[m 💄 style: Modal
+[33mf33428d[m 💫 animate: Check
+[33m516dd7e[m ✨ feat: Add Check to fighter attribute
+[33m6a46213[m ✨ feat: Add Player placeholder
+[33m4c5e73e[m 💄 style: Scoreboard
+[33m44e46f3[m 💫 animate: Player
+[33m43bcfd8[m 💫 animate: Fighters card
+[33mca03300[m 💫 animate: Button
+[33mdca4cd0[m 💄 style: Button
+[33m6f4a6fc[m 📝 Add fighters data
+[33me3bdcdf[m 💄 style: Player
+[33m37763f6[m 💄 style: Character card
+[33m8b1292c[m 💄 style: Add global e theme styles
+[33m0f7bdae[m 🔧 build: Add react vite app
+[33m1651ccd[m Update README.md
+[33m86275a4[m 📝 docs: Add readme file
+[33m2f85077[m Initial commit

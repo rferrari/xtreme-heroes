@@ -11,8 +11,8 @@ import("./components/ScreenLoading").then((module) => ({ default: module.Loading
 const LoginScreen = lazy(() =>    //import LoginScreen from "./components/ScreenLogin";
 import("./components/ScreenLogin").then((module) => ({ default: module.LoginScreen })));
 
-const SpeedInsights = lazy(() =>    //import LoginScreen from "./components/ScreenLogin";
-import("@vercel/speed-insights/next").then((module) => ({ default: module.SpeedInsights })));
+const SpeedInsights = lazy(() =>  
+import("@vercel/speed-insights/react").then((module) => ({ default: module.SpeedInsights })));
 
 import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
