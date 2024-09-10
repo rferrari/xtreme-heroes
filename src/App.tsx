@@ -11,8 +11,7 @@ import("./components/ScreenLoading").then((module) => ({ default: module.Loading
 const LoginScreen = lazy(() =>    //import LoginScreen from "./components/ScreenLogin";
 import("./components/ScreenLogin").then((module) => ({ default: module.LoginScreen })));
 
-const SpeedInsights = lazy(() =>  
-import("@vercel/speed-insights/react").then((module) => ({ default: module.SpeedInsights })));
+// import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { initAioha, Providers } from '@aioha/aioha'
 import { AiohaProvider } from '@aioha/react-ui'
@@ -60,7 +59,7 @@ export function App() {
             <Game setIsLoggedIn={setIsLoggedIn} />
           )}
         </GameProvider>
-        <SpeedInsights />
+        {/* <SpeedInsights /> */}
       </AiohaProvider>
     </ThemeProvider>
   );
