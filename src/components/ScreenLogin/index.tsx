@@ -1,25 +1,24 @@
-import { Asset, KeyTypes } from "@aioha/aioha";
-import { useAioha, AiohaModal } from "@aioha/react-ui";
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useAioha, AiohaModal } from "@aioha/react-ui";
+import { Asset, KeyTypes } from "@aioha/aioha";
+import { motion } from "framer-motion";
 import { fighters } from "../../utils/fighters";
 import { fetchUserPurchasedVIPTicket } from "../../utils/transactions";
 
 export function LoginScreen({ onLogin }: { onLogin: () => void }) {
-  const [modalDisplayed, setModalDisplayed] = useState(false);
-  const [vipMessage, setVipMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
   const { user, aioha } = useAioha()
+  const [modalDisplayed, setModalDisplayed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [vipMessage, setVipMessage] = useState("");
   const [purchasedVIP, setPurchasedVIP] = useState<string[]>([]);
+
   const listVIP = fighters.map(fighter => fighter.name);
   const combinedVIPList = [...listVIP, ...purchasedVIP];
   const isVIP = user && combinedVIPList.includes(user);
-
   // console.log(listVIP);
 
   // Function to fetch the updated VIP list
   let fetchCount = 0;
-
   async function fetchVIPList() {
     if (!user) return;
     if (fetchCount >= 3) return; // Don't fetch if already tried 3 times
@@ -34,7 +33,7 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
         else {
           console.log('Xtreme-Heroes Skate Pass Not Found to ' + user);
         }
-        setTimeout(() => setIsLoading(false), 1500);
+        setTimeout(() => setIsLoading(false), 3000);
       });
     } catch (error) {
       console.error('Error fetching VIP list:', error);
@@ -56,24 +55,24 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       }
 
       if (xfer.success) {
-        console.log(`Wait, adding ${user} to VIP list`);
-        // Reload the updated VIP list after successfully adding the user
+        console.log(`Wait, validating ${user} Skate Pass`);
         setIsLoading(true);
         setTimeout(() => {
-          fetchVIPList();
-        }, 5000); // wait to start search after 5 seconds. Hive blockchain 3s block transactions
+          fetchVIPList();  // Reload the updated VIP list after successfully adding the user
+        }, 5000);          // wait to start search after 5 seconds. Hive blockchain 3s block transactions
       } else {
-        console.log('Failed to add username: ' + user);
+        console.log('Skate pass purchase failed: ' + user);
       }
     } catch (error) {
-      console.error('Transfer failed:', error);
+      console.error('Error Transfer failed:', error);
     }
   }
 
   // Fetch the VIP list when the component mounts
   useEffect(() => {
     if (user) {
-      fetchVIPList();
+      if (isVIP) setIsLoading(false)
+      else       fetchVIPList();
     }
   }, [user]);
 
