@@ -42,30 +42,30 @@ type NextGameInterval =
   | "jail"
   | "rest";
 
-  interface GameProps {
-    setIsLoggedIn: (value: boolean) => void;
-  }
+interface GameProps {
+  setIsLoggedIn: (value: boolean) => void;
+}
 
 // export function Game() {
 export function Game({ setIsLoggedIn }: GameProps) {
-  const { 
-      state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
-      dispatch,
+  const {
+    state: { playerOne, playerTwo, stage, selectedAttribute, turn, isEndGame },
+    dispatch,
   } = useGame();
+
+  const restMessage = "Skateboarding life is tough! You need to get some rest."
+  const jailMessage = "Looks like the grind was too real! Welcome to your new sponsor: the county jail. Better brush up on your cell block ollies!"
 
   const { user, aioha } = useAioha();
   const [currentLevel, setCurrentLevel] = useState(1);
   const [message, setMessage] = useState("Select 10 skaters");
-
   const [isFightButtonVisible, setIsFightButtonVisible] = useState(false);
   const [isRoundResultModalVisible, setIsRoundResultModalVisible] = useState(false);
-  const selectedFightersIds = useRef<number[]>([]);
   const [taskMessage, setCoolTask] = useState('');
-  
   const [isRecovered, setIsRecovered] = useState(true);
-  const restMessage = "Skateboarding life is tough! You need to get some rest."
-  const jailMessage = "Looks like the grind was too real! Welcome to your new sponsor: the county jail. Better brush up on your cell block ollies!"
   const [recoveryMessage, setRecoveryMessage] = useState(restMessage);
+  const selectedFightersIds = useRef<number[]>([]);
+  
 
   // battle logs
   const [roundDescriptions, setRoundDescriptions] = useState<string[]>([]); // New state for round descriptions
@@ -84,11 +84,11 @@ export function Game({ setIsLoggedIn }: GameProps) {
   };
 
   const handleToogleSound = (type: 'backgroundMusic' | 'ollieFx') => {
-     if (soundSettings[type].sound) {
-        const isMuted = !soundSettings[type].isMuted;
-        soundSettings[type].isMuted = isMuted;
-        soundSettings[type].sound.mute(isMuted);
-     } else {
+    if (soundSettings[type].sound) {
+      const isMuted = !soundSettings[type].isMuted;
+      soundSettings[type].isMuted = isMuted;
+      soundSettings[type].sound.mute(isMuted);
+    } else {
       if (type === 'backgroundMusic') {
         const backgroundMusic = new Howl({ src: ['/soundfx/skatepark.mp3'] });
         soundSettings[type].sound = backgroundMusic;
@@ -111,14 +111,14 @@ export function Game({ setIsLoggedIn }: GameProps) {
     if (soundSettings['backgroundMusic'].sound === null) {
       handleToogleSound('backgroundMusic');
     } else {
-       soundSettings['backgroundMusic'].isMuted = false;
-       soundSettings['backgroundMusic'].sound.mute(false);
-       soundSettings['backgroundMusic'].sound.loop(true);
-       soundSettings['backgroundMusic'].sound.play();
+      soundSettings['backgroundMusic'].isMuted = false;
+      soundSettings['backgroundMusic'].sound.mute(false);
+      soundSettings['backgroundMusic'].sound.loop(true);
+      soundSettings['backgroundMusic'].sound.play();
     }
     if (soundSettings['ollieFx'].sound === null) {
       handleToogleSound('ollieFx');
-    }else {
+    } else {
       soundSettings['ollieFx'].isMuted = false;
       soundSettings['ollieFx'].sound.mute(false);
     }
@@ -142,26 +142,26 @@ export function Game({ setIsLoggedIn }: GameProps) {
 
   // Function to change the background image
   const changeBackground = () => {
-   setCurrentLevel(prevLevel => {
-     const nextLevel = prevLevel === 5 ? 1 : prevLevel + 1;
-     return nextLevel;
-   });
+    setCurrentLevel(prevLevel => {
+      const nextLevel = prevLevel === 5 ? 1 : prevLevel + 1;
+      return nextLevel;
+    });
   };
 
 
   const agilitySentences = [
-    "Obstacle ahead, time to show your",  "Can you dodge this? Let's see your",
-    "Quick reflexes needed! Show your",   "Hurdle in your way, show your"
+    "Obstacle ahead, time to show your", "Can you dodge this? Let's see your",
+    "Quick reflexes needed! Show your", "Hurdle in your way, show your"
   ];
-  
+
   const styleSentences = [
-    "Sponsor's watching, show off your",            "Looking good, time to flash your",
+    "Sponsor's watching, show off your", "Looking good, time to flash your",
     "Let's see if you've got that swag. Show your", "Sponsors love a show. Let's see some"
   ];
-  
+
   const speedSentences = [
-    "Cops are on your tail, bolt with your",    "Time to outrun the law, show your",
-    "Can you keep up? Show your",               "No time to slow down, hit 'em with your"
+    "Cops are on your tail, bolt with your", "Time to outrun the law, show your",
+    "Can you keep up? Show your", "No time to slow down, hit 'em with your"
   ];
 
   // Function to get a random sentence from the list
@@ -169,7 +169,7 @@ export function Game({ setIsLoggedIn }: GameProps) {
     const randomIndex = Math.floor(Math.random() * sentences.length);
     return sentences[randomIndex];
   }
-  
+
   useEffect(() => {
     const levelImageUrl = `/skateparks/skate-park-l${currentLevel}.jpeg`;
     const rootElement = document.getElementById('root');
@@ -183,34 +183,34 @@ export function Game({ setIsLoggedIn }: GameProps) {
     dispatch({ type: "setStage", payload: "round-result" });
 
     // Generate markdown for each round
-    let RoundX = roundDescriptions.length+1;
+    let RoundX = roundDescriptions.length + 1;
 
-    const newRoundDescription_NoPicMode = 
-`|${RoundX}|${selectedAttribute?.toUpperCase()}|${winner==="playerOne"?"🏆":"😡"} **${playerOne.selectedFighter?.name}**|${winner==="playerTwo"?"🏆":"😡"} **${playerTwo.selectedFighter?.name}**|`;
+    const newRoundDescription_NoPicMode =
+      `|${RoundX}|${selectedAttribute?.toUpperCase()}|${winner === "playerOne" ? "🏆" : "😡"} **${playerOne.selectedFighter?.name}**|${winner === "playerTwo" ? "🏆" : "😡"} **${playerTwo.selectedFighter?.name}**|`;
 
-// `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
-// |**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
-// ||||`;
+    // `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
+    // |**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
+    // ||||`;
 
     setRoundDescriptions((prev) => [...prev, newRoundDescription_NoPicMode]);
 
 
-/* OLD USING BIG TABLE
-const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
-|**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
-||||`;
-*/    
+    /* OLD USING BIG TABLE
+    const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***|||
+    |**${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} |VS| **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"}|
+    ||||`;
+    */
 
-/*  OLD USING PROFILE PICTURE    
-    const newRoundDescription_PictureMode = `
-## Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***
-\n
-| ![${playerOne.selectedFighter?.name}](https://images.hive.blog/u/${playerOne.selectedFighter?.name}/avatar) | **VS** | ![${playerTwo.selectedFighter?.name}](https://images.hive.blog/u/${playerTwo.selectedFighter?.name}/avatar) |
-|-|-|-|
-| **${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} | | **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"} |
-`;
-    setRoundDescriptions((prev) => [...prev, newRoundDescription]);
-*/
+    /*  OLD USING PROFILE PICTURE    
+        const newRoundDescription_PictureMode = `
+    ## Round ${RoundX}: ***${selectedAttribute?.toUpperCase()}***
+    \n
+    | ![${playerOne.selectedFighter?.name}](https://images.hive.blog/u/${playerOne.selectedFighter?.name}/avatar) | **VS** | ![${playerTwo.selectedFighter?.name}](https://images.hive.blog/u/${playerTwo.selectedFighter?.name}/avatar) |
+    |-|-|-|
+    | **${playerOne.selectedFighter?.name}** ${winner === "playerOne" ? "🏆" : "😡"} | | **${playerTwo.selectedFighter?.name}** ${winner === "playerTwo" ? "🏆" : "😡"} |
+    `;
+        setRoundDescriptions((prev) => [...prev, newRoundDescription]);
+    */
   }
 
   const paragraphAnimation: Variants = {
@@ -282,7 +282,7 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     if (!nextGameTime) {
       return true; // No countdown means the user can play
     }
-  
+
     if (nextGameType && nextGameType === 'jail')
       setRecoveryMessage(jailMessage);
 
@@ -290,17 +290,6 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
     const countdownEnd = new Date(nextGameTime);
     return now >= countdownEnd; // True if the current time is after the countdown
   }
-  
-  //   const now = new Date();
-  //   const countdownEnd = new Date(nextGameTime);
-  //   const canPlay = now >= countdownEnd;
-
-  //   console.log("is recovered? "+ isRecovered);
-  //   console.log("can play? "+ canPlay);
-
-  //   setisRecovered(canPlay);
-  //   return canPlay; // Return true if the current time is after the countdown
-  // } 
 
   async function handleFightButtonClick() {
     if (!canPlayAgain()) {
@@ -310,7 +299,6 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
       return;
     }
 
-    // sfxOllie.play();
     soundSettings['ollieFx'].sound.play();
 
     dispatch({ type: "setStage", payload: "fighterTwo-selection" });
@@ -335,12 +323,6 @@ const newRoundDescription_NoPicMode = `|Round ${RoundX}: ***${selectedAttribute?
   const handleCooldownComplete = () => {
     setIsRecovered(true);
   };
-
-  // const handleCooldownCheck = () => {
-  //   const nextGameType = localStorage.getItem('recoveryType') as NextGameInterval | null;
-  //   if (nextGameType && nextGameType === 'jail')
-  //     setRecoveryMessage(jailMessage);
-  // };
 
   function getModalAnimation(isWinner: boolean | null) {
     if (isWinner !== null) {
@@ -416,33 +398,33 @@ You Win! Congratulations **${capitalize(String(user))}** on your well-deserved v
     }
   }
 
-  async function shareResultsHive(title: string, post: string){
+  async function shareResultsHive(title: string, post: string) {
     const pa = import.meta.env.VITE_THREAD_AUTHOR || "skatedev";
     const pp = import.meta.env.VITE_THREAD_PERMLINK || "re-skatedev-sidr6t";
     const appname = import.meta.env.VITE_APPNAME || "Xtreme-Heroes";
     const appver = import.meta.env.VITE_APPVER || "1.0.1";
-    
+
     const permlink = new Date()
-    .toISOString()
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .toLowerCase();
+      .toISOString()
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .toLowerCase();
 
     // Get registered providers
     // console.log(aioha.getProviders())
     // Get current logged in user and provider name
     // if (aioha.isLoggedIn()) {
-      // console.log(aioha.getCurrentUser(), aioha.getCurrentProvider())
+    // console.log(aioha.getCurrentUser(), aioha.getCurrentProvider())
     // }
 
     //need to send title blank
     title = "";
     const commentResponse = await aioha.comment(
-      pa, pp, permlink, 
+      pa, pp, permlink,
       title, post,
-      { app:  `${appname}/${appver}`});
+      { app: `${appname}/${appver}` });
 
-      if (commentResponse.success===false)
-        console.error(commentResponse.error);
+    if (commentResponse.success === false)
+      console.error(commentResponse.error);
 
     return (commentResponse.success === true);
   }
@@ -453,9 +435,9 @@ You Win! Congratulations **${capitalize(String(user))}** on your well-deserved v
     var link = "";
     if (sponsoredBy) {
       selectedSponsor = sponsoredBy[Math.floor(Math.random() * sponsoredBy.length)];
-      if (selectedSponsor == "Skatehive"){
+      if (selectedSponsor == "Skatehive") {
         //if skate hive send to main app page
-        link = `<a target='_blank' href='https://www.skatehive.app/'>${selectedSponsor}</a>`;        
+        link = `<a target='_blank' href='https://www.skatehive.app/'>${selectedSponsor}</a>`;
       } else {
         //if has hive user, send to profile page
         link = `<a target='_blank' href='https://www.skatehive.app/skater/${selectedSponsor.toLowerCase()}'>${selectedSponsor}</a>`;
@@ -467,7 +449,7 @@ You Win! Congratulations **${capitalize(String(user))}** on your well-deserved v
     return link;
   }
 
-  function selectWordDefineForPost(finalRounds:number){
+  function selectWordDefineForPost(finalRounds: number) {
     if (finalRounds <= 10) {
       return "super easy";
     } else if (finalRounds <= 13) {
@@ -487,38 +469,38 @@ You Win! Congratulations **${capitalize(String(user))}** on your well-deserved v
     } else {
       return "electrifying";
     }
-}
+  }
 
 
-/* eslint-disable no-console */
-function generatePostMarkdown(){
-  // Join all roundDescriptions into a single markdown string
-  var myResultsPost = roundDescriptions.join('\n');
-  let finalRounds = roundDescriptions.length-1;
-  
-  const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS 
-                          || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG";
-  const ipfsCoverSize = import.meta.env.VITE_COVER_IMAGE_SIZE 
-                          || "?width=150&height=150format=match&mode=fit";
-  const coverImage = `![](${ipfsCoverImage}${ipfsCoverSize})`;
+  /* eslint-disable no-console */
+  function generatePostMarkdown() {
+    // Join all roundDescriptions into a single markdown string
+    var myResultsPost = roundDescriptions.join('\n');
+    let finalRounds = roundDescriptions.length - 1;
 
-  const wordDefine = selectWordDefineForPost(finalRounds);
-  const selectedSponsor = selectSponsorForPost();
-  const postIntro = 
-`In another ${import.meta.env.VITE_APPNAME} competition sponsored by **${selectedSponsor}**, we had an ${wordDefine} match that came down to the wire! Check out the results below:`;
-  
-  const myResultsPostTitle = 
-`## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
-  
-  const tableHeader = 
-`|#|Round|Skater 1|Skater 2|
+    const ipfsCoverImage = import.meta.env.VITE_COVER_IMAGE_IPFS
+      || "https://images.hive.blog/p/4PYjjVwJ1UdtKnkrscpjxEPM6U94zw7F6Fwrn4rREDDWcQe613PHiB8Hc3s19MiKpHAr39sEQ243t7opobutvNVwt7DG2wR51c2bEWV1ZWG";
+    const ipfsCoverSize = import.meta.env.VITE_COVER_IMAGE_SIZE
+      || "?width=150&height=150format=match&mode=fit";
+    const coverImage = `![](${ipfsCoverImage}${ipfsCoverSize})`;
+
+    const wordDefine = selectWordDefineForPost(finalRounds);
+    const selectedSponsor = selectSponsorForPost();
+    const postIntro =
+      `In another ${import.meta.env.VITE_APPNAME} competition sponsored by **${selectedSponsor}**, we had an ${wordDefine} match that came down to the wire! Check out the results below:`;
+
+    const myResultsPostTitle =
+      `## My ${finalRounds} Rounds ${import.meta.env.VITE_APPNAME} Result`;
+
+    const tableHeader =
+      `|#|Round|Skater 1|Skater 2|
 | --- | --- | --- | --- |`;
-  
-  const footer = `<center>*Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes! Play Now:*
+
+    const footer = `<center>*Gear up, hit the ramps, and unleash your skills! Join the Xtreme-Heroes! Play Now:*
 ***<a href="https://xtreme-heroes.vercel.app/" target="_blank">xtreme-heroes.vercel.app</a>***</center>`;
-  
-  myResultsPost = 
-`${coverImage}
+
+    myResultsPost =
+      `${coverImage}
 
 ${myResultsPostTitle}
 
@@ -530,19 +512,19 @@ ${myResultsPost}
 ${footer}
 `;
 
-  // Log the markdown for debugging
-  console.log(myResultsPost);
-  return myResultsPost;
-}
-/* eslint-enable no-console */
+    // Log the markdown for debugging
+    console.log(myResultsPost);
+    return myResultsPost;
+  }
+  /* eslint-enable no-console */
 
 
   async function handlePostResultsSkateHive() {
     try {
       const myResultsPost = generatePostMarkdown();
-      shareResultsHive("", myResultsPost).then((results)=> {
+      shareResultsHive("", myResultsPost).then((results) => {
         // console.log(results);
-        if(results===false) return; // if user cancel posting, continue to modal ??? fail... stop or continue?
+        if (results === false) return; // if user cancel posting, continue to modal ??? fail... stop or continue?
         handleEndGameButtonClick(); // sucess posting, Handle the end game button click  or wait to press continue
       })
     } catch (err) {
@@ -551,7 +533,7 @@ ${footer}
   }
 
 
-  function defineNextGameInterval(timeoutType: NextGameInterval){
+  function defineNextGameInterval(timeoutType: NextGameInterval) {
     // Determine the recovery time based on win/loss
     const now = new Date();
     const recoveryTime = timeoutType === "rest" ? 10 : 45; // 10 minutes for win, 45 for loss
@@ -664,7 +646,7 @@ ${footer}
 
   function handleQuitGame() {
     const confirmation = window.confirm("You will lose the game. Are you sure you want to leave?");
-  
+
     if (confirmation) {
       stopSounds();
       handleEndGameButtonClick();
@@ -675,70 +657,70 @@ ${footer}
   return (
     <Container>
 
-  <div style={{position:'absolute', zIndex: "101",}}>
-        <button
-          style={{
-            padding: "1rem 2rem",
-            fontSize: "1em",
-            fontFamily: "creepster",
-            border: "0px solid yellow",
-            color: "white",
-            textShadow: "2px 2px 4px black",
-          }}
-          onClick={() => handleQuitGame()}
-        >
-         I Quit!
-          {/* {user ?? "Connect Wallet"} */}
-        </button>
+<div style={{ position: 'absolute', zIndex: "101", display: 'flex', justifyContent: 'space-between', margin: '0rem' }}>
+  <button
+    style={{
+      padding: "0rem 0rem",
+      fontSize: "1em",
+      fontFamily: "creepster",
+      border: "0px solid yellow",
+      color: "white",
+      textShadow: "2px 2px 4px black",
+      minWidth: "50px",
+    }}
+    onClick={() => handleQuitGame()}
+  >
+    I Quit!
+    {/* {user ?? "Connect Wallet"} */}
+  </button>
 
-        <button
-        style={{
-          padding: '1rem 2rem',
-          fontSize: '1em',
-          fontFamily: 'creepster',
-          border: '0px solid yellow',
-          color: 'white',
-          minWidth: '111px',
-          textShadow: "2px 2px 4px black",
-        }}
-        onClick={() => handleToogleSound('backgroundMusic')}
-      >
-        {soundSettings['backgroundMusic'].isMuted ? 'Music Off' : 'Music On'}
-      </button>
-      <button
-        style={{
-          padding: '1rem 2rem',
-          fontSize: '1em',
-          fontFamily: 'creepster',
-          border: '0px solid yellow',
-          color: 'white',
-          minWidth: '111px',
-          textShadow: "2px 2px 4px black",
-        }}
-        onClick={() => handleToogleSound('ollieFx')}
-      >
-        {soundSettings['ollieFx'].isMuted ? 'Fx Off' : 'Fx On'}
-      </button>
+  <button
+    style={{
+      padding: '0rem 0rem',
+      fontSize: '1em',
+      fontFamily: 'creepster',
+      border: '0px solid yellow',
+      color: 'white',
+      minWidth: '100px',
+      textShadow: "2px 2px 4px black",
+    }}
+    onClick={() => handleToogleSound('backgroundMusic')}
+  >
+    {soundSettings['backgroundMusic'].isMuted ? 'Music Off' : 'Music On'}
+  </button>
+  <button
+    style={{
+      padding: '0rem 0rem',
+      fontSize: '1em',
+      fontFamily: 'creepster',
+      border: '0px solid yellow',
+      color: 'white',
+      minWidth: '55px',
+      textShadow: "2px 2px 4px black",
+    }}
+    onClick={() => handleToogleSound('ollieFx')}
+  >
+    {soundSettings['ollieFx'].isMuted ? 'Fx Off' : 'Fx On'}
+  </button>
 
-      <div style={{ position: 'relative', top: '0px' }}>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="slider"
-          style={{
-            width: '100%',
-            height: '20px',
-            background: 'rgba(0,0,0,.5)',
-            appearance: 'none',
-          }}
-        />
-      </div>
-
+  <div style={{ width: '100%', marginLeft: '0px', marginTop: '10px' }}>
+    <input
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      value={volume}
+      onChange={handleVolumeChange}
+      className="slider"
+      style={{
+        width: '80%',
+        height: '20px',
+        background: 'rgba(0,0,0,.5)',
+        appearance: 'none',
+      }}
+    />
   </div>
+</div>
 
       <Player
         selectedFighter={playerOne.selectedFighter}
@@ -756,38 +738,38 @@ ${footer}
           id="attribute"
         >
 
-          <p style={{color:'yellow', fontSize:'0.9em'}}>
+          <p style={{ color: 'yellow', fontSize: '0.9em' }}>
             {taskMessage}
           </p>
-          
+
           {/* <span>{selectedAttribute}</span> */}
 
-          { !isRecovered ? (
+          {!isRecovered ? (
             <span>Recovering Breath</span>
-          ) : (    
+          ) : (
             <span>{selectedAttribute}</span>
           )}
 
         </motion.p>
 
         {!isRecovered ? (<>
-          <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>
-          {recoveryMessage}
+          <p style={{ marginTop: '1.5em', fontSize: "1.5em" }}>
+            {recoveryMessage}
           </p></>
-        ) : (  
-        <p style={{ marginTop:'1.5em', fontSize: "1.5em" }}>
-          {message}
-        </p>
+        ) : (
+          <p style={{ marginTop: '1.5em', fontSize: "1.5em" }}>
+            {message}
+          </p>
         )}
 
         {!isRecovered ? (<></>
-        // <ItemsStore />  
-        ) : (  
-        <Fighters />
+          // <ItemsStore />  
+        ) : (
+          <Fighters />
         )}
 
         {!isRecovered ? (
-          <CountdownTimer onComplete={handleCooldownComplete} 
+          <CountdownTimer onComplete={handleCooldownComplete}
           // onCheck={handleCooldownCheck} 
           />
         ) : (
@@ -800,7 +782,7 @@ ${footer}
         {/*!isRecovered ? (
             <CountdownTimer />
         ) : (*/}
-          {/* <Button title="Battle!!"
+        {/* <Button title="Battle!!"
             onClick={handleFightButtonClick}
             isVisible={isFightButtonVisible}
           /> */}
@@ -832,31 +814,31 @@ ${footer}
         </Modal>
       )}
 
-{isEndGame && (
-  <Modal>
-    <Animation
-      autoplay
-      keepLastFrame
-      style={{ width: "24rem", height: "24rem" }}
-      src={
-        playerOne.isWinner
-          ? "https://assets9.lottiefiles.com/packages/lf20_touohxv0.json"
-          : "https://assets4.lottiefiles.com/packages/lf20_q1i4uDv2pj.json"
-      }
-    ></Animation>
-    <strong
-      style={{
-        color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
-      }}
-    >
-      {playerOne.isWinner ? "You're the champion!" 
-                          : "You're Busted!"}
-    </strong>
-    <Button title="Share Results" onClick={handlePostResultsSkateHive} />
-    <Button title="Continue" onClick={handleEndGameButtonClick} />
-    
-  </Modal>
-)}
+      {isEndGame && (
+        <Modal>
+          <Animation
+            autoplay
+            keepLastFrame
+            style={{ width: "24rem", height: "24rem" }}
+            src={
+              playerOne.isWinner
+                ? "https://assets9.lottiefiles.com/packages/lf20_touohxv0.json"
+                : "https://assets4.lottiefiles.com/packages/lf20_q1i4uDv2pj.json"
+            }
+          ></Animation>
+          <strong
+            style={{
+              color: theme.colors[playerOne.isWinner ? "yellow" : "red"],
+            }}
+          >
+            {playerOne.isWinner ? "You're the champion!"
+              : "You're Busted!"}
+          </strong>
+          <Button title="Share Results" onClick={handlePostResultsSkateHive} />
+          <Button title="Continue" onClick={handleEndGameButtonClick} />
+
+        </Modal>
+      )}
     </Container>
   );
 }
