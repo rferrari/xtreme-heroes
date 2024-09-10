@@ -1,11 +1,9 @@
 import { useState, useEffect, lazy } from "react";
-
- import { Game } from "./components/Game";
+import { Game } from "./components/Game";
 // const Game = lazy(() =>
 //   // named export
 //   import("./components/Game").then((module) => ({ default: module.Game }))
 // );
-
 
 // import { GameProvider } from "./hooks/useGame";
 const GameProvider = lazy(() =>
@@ -20,7 +18,6 @@ import GlobalStyles from "./styles/global";
 import theme from "./styles/theme";
 
 //import LoadingScreen from "./components/ScreenLoading";
-
 // Dynamic imports
 const LoadingScreen = lazy(() =>
   // named export
@@ -34,10 +31,24 @@ const LoginScreen = lazy(() =>
   import("./components/ScreenLogin").then((module) => ({ default: module.LoginScreen }))
 );
 
+import { initAioha, Providers } from '@aioha/aioha'
+import { AiohaProvider } from '@aioha/react-ui'
+import '@aioha/react-ui/dist/build.css'
 import { AiohaModal } from '@aioha/react-ui'
 import { KeyTypes } from '@aioha/aioha'
-// import { Background } from "./components/Player/styles";
 
+const aioha = initAioha({
+  hiveauth: {
+    name: (import.meta.env.VITE_APPNAME || 'Xtreme-Heroes'),
+    description: "Login " + import.meta.env.VITE_APPNAME + " Skatehive"
+  },
+});
+
+aioha.deregisterProvider(Providers.HiveSigner);
+aioha.deregisterProvider(Providers.PeakVault);
+aioha.deregisterProvider(Providers.Ledger);
+
+// import { Background } from "./components/Player/styles";
 // import { fighters } from "./utils/fighters";
 // import { fetchUserPurchasedVIPTicket } from "./utils/transactions";
 
@@ -60,29 +71,30 @@ export function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <GameProvider>
-        <GlobalStyles />
-        {loading ? (
-          <LoadingScreen />
-        ) : !isLoggedIn ? (
-          <LoginScreen onLogin={handleLogin} />
-        ) : (
-          // <Game />
-          <Game setIsLoggedIn={setIsLoggedIn} /> // Pass setIsLoggedIn as a prop to Game
-        )}
+      <AiohaProvider aioha={aioha}>
+        <GameProvider>
+          <GlobalStyles />
+          {loading ? (
+            <LoadingScreen />
+          ) : !isLoggedIn ? (
+            <LoginScreen onLogin={handleLogin} />
+          ) : (
+            // Passing setIsLoggedIn to Game can go back to login screen
+            // <Game /> //old game with no propos
+            <Game setIsLoggedIn={setIsLoggedIn} />
+          )}
 
-
-        <AiohaModal
-          displayed={modalDisplayed}
-          loginOptions={{
-            msg: 'Login',
-            keyType: KeyTypes.Posting
-          }}
-          onLogin={console.log}
-          onClose={setModalDisplayed}
-        />
-
-      </GameProvider>
+          <AiohaModal
+            displayed={modalDisplayed}
+            loginOptions={{
+              msg: 'Login',
+              keyType: KeyTypes.Posting
+            }}
+            onLogin={console.log}
+            onClose={setModalDisplayed}
+          />
+        </GameProvider>
+      </AiohaProvider>
     </ThemeProvider>
   );
 }
