@@ -674,7 +674,7 @@ ${footer}
     {/* {user ?? "Connect Wallet"} */}
   </button>
 
-  <button
+  <button id='btnBgMusic'
     style={{
       padding: '0rem 0rem',
       fontSize: '1em',
@@ -688,7 +688,7 @@ ${footer}
   >
     {soundSettings['backgroundMusic'].isMuted ? 'Music Off' : 'Music On'}
   </button>
-  <button
+  <button id='btnSoundFx'
     style={{
       padding: '0rem 0rem',
       fontSize: '1em',
@@ -729,7 +729,6 @@ ${footer}
       />
 
       <div className="middle">
-
         <motion.p
           variants={paragraphAnimation}
           animate={selectedAttribute ? "visible" : "invisible"}

@@ -204,7 +204,7 @@ export function Player({
             <AnimatePresence mode="wait">
               <FighterCard
                 key={String(id)}
-                image={`/skaters/${image}`}
+                image={`${image}`}
                 variants={cardAnimation}
                 initial={"enter"}
                 animate={isSelected ? "active" : "desactive"}
