@@ -101,7 +101,7 @@ export function Player({
           key={selectedFighter.id}
           isBot={isBot}
           isDisabled={isDisabled}
-          image={`/skaters/${selectedFighter.image}`}
+          image={`${selectedFighter.image}`}
           initial={{ x: isBot ? 20 : -20, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.4 }}
